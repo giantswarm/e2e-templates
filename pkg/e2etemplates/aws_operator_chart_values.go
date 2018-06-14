@@ -27,6 +27,7 @@ const AWSOperatorChartValues = `Installation:
         IncludeTags: true
         Route53:
           Enabled: true
+        Encrypter: 'kms'
     Secret:
       AWSOperator:
         IDRSAPub: ${IDRSA_PUB}
