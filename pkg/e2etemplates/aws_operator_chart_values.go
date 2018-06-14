@@ -4,6 +4,9 @@ package e2etemplates
 // variables will be expanded before writing the contents to a file.
 const AWSOperatorChartValues = `Installation:
   V1:
+    Auth:
+      Vault:
+        Address: http://vault.default.svc.cluster.local:8200
     Guest:
       Kubernetes:
         API:
