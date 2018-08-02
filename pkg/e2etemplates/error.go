@@ -10,3 +10,12 @@ var invalidDataError = &microerror.Error{
 func IsInvalidData(err error) bool {
 	return microerror.Cause(err) == invalidDataError
 }
+
+var invalidDataError = &microerror.Error{
+	Kind: "invalidDataError",
+}
+
+// IsInvalidData asserts invalidDataError.
+func IsInvalidData(err error) bool {
+	return microerror.Cause(err) == invalidDataError
+}
