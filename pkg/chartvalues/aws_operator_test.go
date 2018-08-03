@@ -47,7 +47,7 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 	return c
 }
 
-func Test_AWSOperatorChartValues(t *testing.T) {
+func Test_NewAWSOperator(t *testing.T) {
 	testCases := []struct {
 		name           string
 		config         AWSOperatorConfig
@@ -206,7 +206,7 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 	}
 }
 
-func Test_AWSOperatorChartValues_Validate(t *testing.T) {
+func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 	testCases := []struct {
 		name         string
 		config       AWSOperatorConfig
