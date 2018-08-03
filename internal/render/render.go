@@ -1,4 +1,4 @@
-package e2etemplates
+package render
 
 import (
 	"bytes"
@@ -7,18 +7,7 @@ import (
 	"github.com/giantswarm/microerror"
 )
 
-type Data interface {
-	// Validate returns error matched by IsInvalidData when template data
-	// is invalid.
-	Validate() error
-}
-
-func Render(content string, data Data) (string, error) {
-	err := data.Validate()
-	if err != nil {
-		return "", microerror.Mask(err)
-	}
-
+func Render(content string, data interface{}) (string, error) {
 	t, err := template.New("e2etemplate").Parse(content)
 	if err != nil {
 		return "", microerror.Mask(err)

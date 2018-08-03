@@ -1,32 +1,36 @@
-package e2etemplates
+package chartvalues
 
-import "testing"
+import (
+	"testing"
 
-func newAWSOperatorChartAllSetFromFullySet(modifyFunc func(*AWSOperatorChart)) AWSOperatorChart {
-	fullySet := AWSOperatorChart{
-		Guest: AWSOperatorChartGuest{
-			Update: AWSOperatorChartGuestUpdate{
+	"github.com/giantswarm/e2etemplates/internal/rendertest"
+)
+
+func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOperatorConfig {
+	c := AWSOperatorConfig{
+		Guest: AWSOperatorConfigGuest{
+			Update: AWSOperatorConfigGuestUpdate{
 				Enabled: true,
 			},
 		},
-		Provider: AWSOperatorChartProvider{
-			AWS: AWSOperatorChartProviderAWS{
+		Provider: AWSOperatorConfigProvider{
+			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter: "vault",
 				Region:    "eu-central-1",
 			},
 		},
-		Secret: AWSOperatorChartSecret{
-			AWSOperator: AWSOperatorChartSecretAWSOperator{
+		Secret: AWSOperatorConfigSecret{
+			AWSOperator: AWSOperatorConfigSecretAWSOperator{
 				IDRSAPub: "test-idrsa-pub",
-				SecretYaml: AWSOperatorChartSecretAWSOperatorSecretYaml{
-					Service: AWSOperatorChartSecretAWSOperatorSecretYamlService{
-						AWS: AWSOperatorChartSecretAWSOperatorSecretYamlServiceAWS{
-							AccessKey: AWSOperatorChartSecretAWSOperatorSecretYamlServiceAWSAccessKey{
+				SecretYaml: AWSOperatorConfigSecretAWSOperatorSecretYaml{
+					Service: AWSOperatorConfigSecretAWSOperatorSecretYamlService{
+						AWS: AWSOperatorConfigSecretAWSOperatorSecretYamlServiceAWS{
+							AccessKey: AWSOperatorConfigSecretAWSOperatorSecretYamlServiceAWSAccessKey{
 								ID:     "test-access-key-id",
 								Secret: "test-access-key-secret",
 								Token:  "test-access-key-token",
 							},
-							HostAccessKey: AWSOperatorChartSecretAWSOperatorSecretYamlServiceAWSAccessKey{
+							HostAccessKey: AWSOperatorConfigSecretAWSOperatorSecretYamlServiceAWSAccessKey{
 								ID:     "test-host-access-key-id",
 								Secret: "test-host-access-key-secret",
 								Token:  "test-host-access-key-token",
@@ -36,30 +40,29 @@ func newAWSOperatorChartAllSetFromFullySet(modifyFunc func(*AWSOperatorChart)) A
 				},
 			},
 		},
-
-		RegistryPullSecret: "registry-pull-secret",
+		RegistryPullSecret: "test-registry-pull-secret",
 	}
 
-	modifyFunc(&fullySet)
-	return fullySet
+	modifyFunc(&c)
+	return c
 }
 
 func Test_AWSOperatorChartValues(t *testing.T) {
 	testCases := []struct {
 		name           string
-		data           Data
+		config         AWSOperatorConfig
 		expectedValues string
 		errorMatcher   func(err error) bool
 	}{
 		{
-			name:           "case 0: invalid data",
-			data:           AWSOperatorChart{},
+			name:           "case 0: invalid config",
+			config:         AWSOperatorConfig{},
 			expectedValues: ``,
-			errorMatcher:   IsInvalidData,
+			errorMatcher:   IsInvalidConfig,
 		},
 		{
-			name: "case 1: all values set",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {}),
+			name:   "case 1: all values set",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {}),
 			expectedValues: `Installation:
   V1:
     Auth:
@@ -107,7 +110,7 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 
       Registry:
         PullSecret:
-          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"registry-pull-secret\"}}}"
+          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
     Security:
       RestrictAccess:
         Enabled: false
@@ -116,7 +119,7 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 		},
 		{
 			name: "case 2: all optional values left",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Guest.Update.Enabled = false
 				v.Provider.AWS.Encrypter = ""
 			}),
@@ -167,7 +170,7 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 
       Registry:
         PullSecret:
-          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"registry-pull-secret\"}}}"
+          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
     Security:
       RestrictAccess:
         Enabled: false
@@ -178,7 +181,7 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			values, err := Render(AWSOperatorChartValues, tc.data)
+			values, err := NewAWSOperator(tc.config)
 
 			switch {
 			case err == nil && tc.errorMatcher == nil:
@@ -195,7 +198,7 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 				return
 			}
 
-			line, difference := diff(values, tc.expectedValues)
+			line, difference := rendertest.Diff(values, tc.expectedValues)
 			if line > 0 {
 				t.Fatalf("line == %d, want 0, diff: %s", line, difference)
 			}
@@ -206,77 +209,77 @@ func Test_AWSOperatorChartValues(t *testing.T) {
 func Test_AWSOperatorChartValues_Validate(t *testing.T) {
 	testCases := []struct {
 		name         string
-		data         AWSOperatorChart
+		config       AWSOperatorConfig
 		errorMatcher func(err error) bool
 	}{
 		{
 			name: "case 0: invalid .Provider.AWS.Region",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Provider.AWS.Region = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 1: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 2: invalid .Secret.AWSOperator.IDRSAPub",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.IDRSAPub = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 3: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 		{
 			name: "case 8: invalid .RegistryPullSecret",
-			data: newAWSOperatorChartAllSetFromFullySet(func(v *AWSOperatorChart) {
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
-			errorMatcher: IsInvalidData,
+			errorMatcher: IsInvalidConfig,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := Render(AWSOperatorChartValues, tc.data)
+			_, err := NewAWSOperator(tc.config)
 
 			switch {
 			case err == nil && tc.errorMatcher == nil:

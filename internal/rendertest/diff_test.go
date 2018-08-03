@@ -1,36 +1,9 @@
-package e2etemplates
+package rendertest
 
 import (
-	"fmt"
 	"reflect"
-	"strings"
 	"testing"
 )
-
-func diff(a, b string) (int, string) {
-	aSplit := strings.Split(a, "\n")
-	bSplit := strings.Split(b, "\n")
-
-	length := len(aSplit)
-	if len(bSplit) < length {
-		length = len(bSplit)
-	}
-
-	for i := 0; i < length; i++ {
-		if aSplit[i] != bSplit[i] {
-			return i + 1, fmt.Sprintf("a: %q b: %q", aSplit[i], bSplit[i])
-		}
-	}
-
-	if len(aSplit) > len(bSplit) {
-		return len(bSplit) + 1, fmt.Sprintf("a: %q b: EOF", aSplit[len(bSplit)])
-	}
-	if len(aSplit) < len(bSplit) {
-		return len(aSplit) + 1, fmt.Sprintf("a: EOF b: %q", bSplit[len(aSplit)])
-	}
-
-	return 0, ""
-}
 
 func Test_diff(t *testing.T) {
 	testCases := []struct {
@@ -94,7 +67,7 @@ func Test_diff(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			line, difference := diff(tc.a, tc.b)
+			line, difference := Diff(tc.a, tc.b)
 
 			if !reflect.DeepEqual(line, tc.expectedLine) {
 				t.Fatalf("line == %d, want %d", line, tc.expectedLine)
