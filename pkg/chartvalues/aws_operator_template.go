@@ -27,11 +27,7 @@ const awsOperatorTemplate = `Installation:
         IncludeTags: true
         Route53:
           Enabled: true
-	{{- if .Provider.AWS.Encrypter }}
         Encrypter: '{{ .Provider.AWS.Encrypter }}'
-	{{- else }}
-        Encrypter: 'kms'
-	{{- end }}
     Registry:
       Domain: quay.io
     Secret:

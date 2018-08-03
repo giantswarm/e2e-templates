@@ -6,6 +6,10 @@ import (
 	"github.com/giantswarm/e2etemplates/internal/render"
 )
 
+const (
+	defaultEncrypter = "kms"
+)
+
 type AWSOperatorConfig struct {
 	Guest    AWSOperatorConfigGuest
 	Provider AWSOperatorConfigProvider
@@ -66,6 +70,9 @@ func NewAWSOperator(config AWSOperatorConfig) (string, error) {
 	}
 	if config.Secret.AWSOperator.IDRSAPub == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.IDRSAPub must not be empty", config)
+	}
+	if config.Provider.AWS.Encrypter == "" {
+		config.Provider.AWS.Encrypter = defaultEncrypter
 	}
 	if config.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID must not be empty", config)
