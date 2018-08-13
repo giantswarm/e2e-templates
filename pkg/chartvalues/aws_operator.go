@@ -80,17 +80,11 @@ func NewAWSOperator(config AWSOperatorConfig) (string, error) {
 	if config.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret must not be empty", config)
 	}
-	if config.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token == "" {
-		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token must not be empty", config)
-	}
 	if config.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID must not be empty", config)
 	}
 	if config.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret must not be empty", config)
-	}
-	if config.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token == "" {
-		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token must not be empty", config)
 	}
 	if config.RegistryPullSecret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.RegistryPullSecret must not be empty", config)
