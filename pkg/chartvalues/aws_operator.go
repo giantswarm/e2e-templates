@@ -11,19 +11,10 @@ const (
 )
 
 type AWSOperatorConfig struct {
-	Guest    AWSOperatorConfigGuest
 	Provider AWSOperatorConfigProvider
 	Secret   AWSOperatorConfigSecret
 
 	RegistryPullSecret string
-}
-
-type AWSOperatorConfigGuest struct {
-	Update AWSOperatorConfigGuestUpdate
-}
-
-type AWSOperatorConfigGuestUpdate struct {
-	Enabled bool
 }
 
 type AWSOperatorConfigProvider struct {

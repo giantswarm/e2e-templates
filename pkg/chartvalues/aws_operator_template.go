@@ -18,7 +18,7 @@ const awsOperatorTemplate = `Installation:
       SSH:
         SSOPublicKey: 'test'
       Update:
-        Enabled: {{ .Guest.Update.Enabled }}
+        Enabled: true
     Name: ci-aws-operator
     Provider:
       AWS:

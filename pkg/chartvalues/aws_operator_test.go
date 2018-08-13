@@ -8,11 +8,6 @@ import (
 
 func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOperatorConfig {
 	c := AWSOperatorConfig{
-		Guest: AWSOperatorConfigGuest{
-			Update: AWSOperatorConfigGuestUpdate{
-				Enabled: true,
-			},
-		},
 		Provider: AWSOperatorConfigProvider{
 			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter: "vault",
@@ -120,7 +115,6 @@ func Test_NewAWSOperator(t *testing.T) {
 		{
 			name: "case 2: all optional values left",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Guest.Update.Enabled = false
 				v.Provider.AWS.Encrypter = ""
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token = ""
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token = ""
@@ -143,7 +137,7 @@ func Test_NewAWSOperator(t *testing.T) {
       SSH:
         SSOPublicKey: 'test'
       Update:
-        Enabled: false
+        Enabled: true
     Name: ci-aws-operator
     Provider:
       AWS:
