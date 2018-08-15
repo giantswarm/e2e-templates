@@ -8,11 +8,6 @@ import (
 
 func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOperatorConfig {
 	c := AWSOperatorConfig{
-		Guest: AWSOperatorConfigGuest{
-			Update: AWSOperatorConfigGuestUpdate{
-				Enabled: true,
-			},
-		},
 		Provider: AWSOperatorConfigProvider{
 			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter: "vault",
@@ -100,13 +95,13 @@ func Test_NewAWSOperator(t *testing.T) {
           service:
             aws:
               accesskey:
-                id: test-access-key-id
-                secret: test-access-key-secret
-                token: test-access-key-token
+                id: 'test-access-key-id'
+                secret: 'test-access-key-secret'
+                token: 'test-access-key-token'
               hostaccesskey:
-                id: test-host-access-key-id
-                secret: test-host-access-key-secret
-                token: test-host-access-key-token
+                id: 'test-host-access-key-id'
+                secret: 'test-host-access-key-secret'
+                token: 'test-host-access-key-token'
 
       Registry:
         PullSecret:
@@ -120,8 +115,9 @@ func Test_NewAWSOperator(t *testing.T) {
 		{
 			name: "case 2: all optional values left",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Guest.Update.Enabled = false
 				v.Provider.AWS.Encrypter = ""
+				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token = ""
+				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token = ""
 			}),
 			expectedValues: `Installation:
   V1:
@@ -141,7 +137,7 @@ func Test_NewAWSOperator(t *testing.T) {
       SSH:
         SSOPublicKey: 'test'
       Update:
-        Enabled: false
+        Enabled: true
     Name: ci-aws-operator
     Provider:
       AWS:
@@ -160,13 +156,13 @@ func Test_NewAWSOperator(t *testing.T) {
           service:
             aws:
               accesskey:
-                id: test-access-key-id
-                secret: test-access-key-secret
-                token: test-access-key-token
+                id: 'test-access-key-id'
+                secret: 'test-access-key-secret'
+                token: ''
               hostaccesskey:
-                id: test-host-access-key-id
-                secret: test-host-access-key-secret
-                token: test-host-access-key-token
+                id: 'test-host-access-key-id'
+                secret: 'test-host-access-key-secret'
+                token: ''
 
       Registry:
         PullSecret:
@@ -241,35 +237,21 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Token = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
+			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
+			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Token = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 8: invalid .RegistryPullSecret",
+			name: "case 6: invalid .RegistryPullSecret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
