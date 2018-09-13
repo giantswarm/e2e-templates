@@ -12,6 +12,9 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter: "vault",
 				Region:    "eu-central-1",
+				TrustedAdvisor: AWSOperatorConfigProviderAWSTrustedAdvisor{
+					Enabled: true,
+				},
 			},
 		},
 		Secret: AWSOperatorConfigSecret{
@@ -91,6 +94,8 @@ func Test_NewAWSOperator(t *testing.T) {
         Route53:
           Enabled: true
         Encrypter: 'vault'
+        TrustedAdvisor:
+          Enabled: true
     Registry:
       Domain: quay.io
     Secret:
@@ -157,6 +162,8 @@ func Test_NewAWSOperator(t *testing.T) {
         Route53:
           Enabled: true
         Encrypter: 'kms'
+        TrustedAdvisor:
+          Enabled: true
     Registry:
       Domain: quay.io
     Secret:

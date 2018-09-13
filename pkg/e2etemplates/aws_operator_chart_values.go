@@ -35,6 +35,8 @@ const AWSOperatorChartValues = `Installation:
         Route53:
           Enabled: true
         Encrypter: 'kms'
+        TrustedAdvisor:
+          Enabled: true
     Registry:
       Domain: quay.io
     Secret:
