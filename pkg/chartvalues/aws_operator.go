@@ -22,13 +22,8 @@ type AWSOperatorConfigProvider struct {
 }
 
 type AWSOperatorConfigProviderAWS struct {
-	Encrypter      string
-	Region         string
-	TrustedAdvisor AWSOperatorConfigProviderAWSTrustedAdvisor
-}
-
-type AWSOperatorConfigProviderAWSTrustedAdvisor struct {
-	Enabled bool
+	Encrypter string
+	Region    string
 }
 
 type AWSOperatorConfigSecret struct {

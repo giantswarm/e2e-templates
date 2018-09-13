@@ -34,7 +34,7 @@ const awsOperatorTemplate = `Installation:
           Enabled: true
         Encrypter: '{{ .Provider.AWS.Encrypter }}'
         TrustedAdvisor:
-          Enabled: {{ .Provider.AWS.TrustedAdvisor.Enabled }}
+          Enabled: false
     Registry:
       Domain: quay.io
     Secret:

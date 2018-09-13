@@ -12,9 +12,6 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter: "vault",
 				Region:    "eu-central-1",
-				TrustedAdvisor: AWSOperatorConfigProviderAWSTrustedAdvisor{
-					Enabled: false,
-				},
 			},
 		},
 		Secret: AWSOperatorConfigSecret{
