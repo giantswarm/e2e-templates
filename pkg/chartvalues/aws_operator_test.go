@@ -91,6 +91,8 @@ func Test_NewAWSOperator(t *testing.T) {
         Route53:
           Enabled: true
         Encrypter: 'vault'
+        TrustedAdvisor:
+          Enabled: false
     Registry:
       Domain: quay.io
     Secret:
@@ -157,6 +159,8 @@ func Test_NewAWSOperator(t *testing.T) {
         Route53:
           Enabled: true
         Encrypter: 'kms'
+        TrustedAdvisor:
+          Enabled: false
     Registry:
       Domain: quay.io
     Secret:
