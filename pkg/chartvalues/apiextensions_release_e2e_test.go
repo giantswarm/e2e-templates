@@ -52,7 +52,7 @@ authorities:
 date: 0001-01-01T00:00:00Z
 name: 1.0.0
 namespace: default
-provider: AWS
+provider: aws
 version: 1.0.0
 versionBundle:
   version: 1.0.0
