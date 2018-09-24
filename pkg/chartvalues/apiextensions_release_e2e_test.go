@@ -18,7 +18,7 @@ func newAPIExtensionsReleaseConfigFromFilled(modifyFunc func(*APIExtensionsRelea
 		Date:      "0001-01-01T00:00:00Z",
 		Name:      "1.0.0",
 		Namespace: "default",
-		Provider:  "AWS",
+		Provider:  "aws",
 		Version:   "1.0.0",
 		VersionBundle: APIExtensionsReleaseE2EConfigVersionBundle{
 			Version: "1.0.0",

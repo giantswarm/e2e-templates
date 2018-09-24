@@ -1,8 +1,6 @@
 package chartvalues
 
 import (
-	"reflect"
-
 	"github.com/giantswarm/microerror"
 
 	"github.com/giantswarm/e2etemplates/internal/render"
@@ -46,7 +44,7 @@ func NewAPIExtensionsReleaseE2E(config APIExtensionsReleaseE2EConfig) (string, e
 		return "", microerror.Maskf(invalidConfigError, "%T.Version must not be empty", config)
 	}
 
-	if reflect.DeepEqual(config.Authorities, []APIExtensionsReleaseE2EConfigAuthority{}) {
+	if len(config.Authorities) == 0 {
 		return "", microerror.Maskf(invalidConfigError, "%T.Authorities must not be empty", config)
 	}
 	if config.VersionBundle.Version == "" {
