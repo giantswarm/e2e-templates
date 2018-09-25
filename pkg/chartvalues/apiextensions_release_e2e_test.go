@@ -8,12 +8,18 @@ import (
 
 func newAPIExtensionsReleaseConfigFromFilled(modifyFunc func(*APIExtensionsReleaseE2EConfig)) APIExtensionsReleaseE2EConfig {
 	c := APIExtensionsReleaseE2EConfig{
-		Namespace: "default",
-
-		Operator: APIExtensionsReleaseE2EConfigOperator{
-			Name:    "test-operator",
-			Version: "1.0.0",
+		Active: true,
+		Authorities: []APIExtensionsReleaseE2EConfigAuthority{
+			{
+				Name:    "test-operator",
+				Version: "1.0.0",
+			},
 		},
+		Date:      "0001-01-01T00:00:00Z",
+		Name:      "1.0.0",
+		Namespace: "default",
+		Provider:  "aws",
+		Version:   "1.0.0",
 		VersionBundle: APIExtensionsReleaseE2EConfigVersionBundle{
 			Version: "1.0.0",
 		},
@@ -39,10 +45,15 @@ func Test_NewAPIExtensionsReleaseE2E(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {}),
-			expectedValues: `namespace: default
-operator:
-  name: test-operator
-  version: 1.0.0
+			expectedValues: `active: true
+authorities:
+  - name: "test-operator"
+    version: "1.0.0"
+date: 0001-01-01T00:00:00Z
+name: 1.0.0
+namespace: default
+provider: aws
+version: 1.0.0
 versionBundle:
   version: 1.0.0
 `,
@@ -84,28 +95,49 @@ func Test_NewAPIExtensionsReleaseE2E_invalidConfigError(t *testing.T) {
 		errorMatcher func(err error) bool
 	}{
 		{
-			name: "case 0: invalid .Namespace",
+			name: "case 0: invalid .Authorities",
+			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
+				v.Authorities = []APIExtensionsReleaseE2EConfigAuthority{}
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 1: invalid .Date",
+			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
+				v.Date = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 2: invalid .Name",
+			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
+				v.Name = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 3: invalid .Namespace",
 			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
 				v.Namespace = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .Operator.Name",
+			name: "case 4: invalid .Provider",
 			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
-				v.Operator.Name = ""
+				v.Provider = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Operator.Version",
+			name: "case 5: invalid .Version",
 			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
-				v.Operator.Version = ""
+				v.Version = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 3: invalid .VersionBundle.Version",
+			name: "case 6: invalid .VersionBundle.Version",
 			config: newAPIExtensionsReleaseConfigFromFilled(func(v *APIExtensionsReleaseE2EConfig) {
 				v.VersionBundle.Version = ""
 			}),
