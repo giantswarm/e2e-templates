@@ -40,8 +40,8 @@ func Test_NewKVMOperator(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newKVMOperatorConfigFromFilled(func(v *KVMOperatorConfig) {}),
-			expectedValues: `clusterRoleBinding: kvm-operator
-clusterRoleBindingPSP: kvm-operator-psp
+			expectedValues: `clusterRoleBindingName: kvm-operator
+clusterRoleBindingNamePSP: kvm-operator-psp
 clusterRoleName: kvm-operator
 clusterRoleNamePSP: kvm-operator-psp
 Installation:

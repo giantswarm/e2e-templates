@@ -1,7 +1,7 @@
 package chartvalues
 
-const kvmOperatorTemplate = `clusterRoleBinding: {{ .ClusterRole.BindingName }}
-clusterRoleBindingPSP: {{ .ClusterRolePSP.BindingName }}
+const kvmOperatorTemplate = `clusterRoleBindingName: {{ .ClusterRole.BindingName }}
+clusterRoleBindingNamePSP: {{ .ClusterRolePSP.BindingName }}
 clusterRoleName: {{ .ClusterRole.Name }}
 clusterRoleNamePSP: {{ .ClusterRolePSP.Name }}
 Installation:
