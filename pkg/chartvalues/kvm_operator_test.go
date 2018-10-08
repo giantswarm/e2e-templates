@@ -46,6 +46,10 @@ clusterRoleName: kvm-operator
 clusterRoleNamePSP: kvm-operator-psp
 Installation:
   V1:
+  GiantSwarm:
+    KVMOperator:
+      CRD:
+        LabelSelector: 'giantswarm.io/cluster=test-cluster'
     Guest:
       SSH:
         SSOPublicKey: 'test'
@@ -64,7 +68,6 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
-labelSelector: 'clusterID=test-cluster'
 `,
 			errorMatcher: nil,
 		},

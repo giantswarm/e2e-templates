@@ -6,6 +6,10 @@ clusterRoleName: {{ .ClusterRole.Name }}
 clusterRoleNamePSP: {{ .ClusterRolePSP.Name }}
 Installation:
   V1:
+  GiantSwarm:
+    KVMOperator:
+      CRD:
+        LabelSelector: 'giantswarm.io/cluster={{ .ClusterName }}'
     Guest:
       SSH:
         SSOPublicKey: 'test'
@@ -24,5 +28,4 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"{{ .RegistryPullSecret }}\"}}}"
-labelSelector: 'clusterID={{ .ClusterName }}'
 `
