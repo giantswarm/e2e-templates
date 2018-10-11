@@ -18,6 +18,9 @@ func newFlannelOperatorConfigFromFilled(modifyFunc func(*FlannelOperatorConfig))
 			Name:        "flannel-operator-psp",
 		},
 		RegistryPullSecret: "test-registry-pull-secret",
+		PSP: FlannelOperatorPSP{
+			Name: "flannel-test-psp",
+		},
 	}
 
 	modifyFunc(&c)
@@ -54,6 +57,7 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+pspName: flannel-test-psp
 `,
 			errorMatcher: nil,
 		},
@@ -128,7 +132,14 @@ func Test_NewFlannelOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .RegistryPullSecret",
+			name: "case 5: invalid .PSP.Name",
+			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
+				v.PSP.Name = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 6: invalid .RegistryPullSecret",
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
