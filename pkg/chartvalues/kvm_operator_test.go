@@ -18,6 +18,9 @@ func newKVMOperatorConfigFromFilled(modifyFunc func(*KVMOperatorConfig)) KVMOper
 			Name:        "kvm-operator-psp",
 		},
 		RegistryPullSecret: "test-registry-pull-secret",
+		PSP: KVMOperatorPSP{
+			Name: "kvm-test-psp",
+		},
 	}
 
 	modifyFunc(&c)
@@ -68,6 +71,7 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+pspName: kvm-test-psp
 `,
 			errorMatcher: nil,
 		},
@@ -142,7 +146,14 @@ func Test_NewKVMOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .RegistryPullSecret",
+			name: "case 5: invalid .PSP.Name",
+			config: newKVMOperatorConfigFromFilled(func(v *KVMOperatorConfig) {
+				v.PSP.Name = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 6: invalid .RegistryPullSecret",
 			config: newKVMOperatorConfigFromFilled(func(v *KVMOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
