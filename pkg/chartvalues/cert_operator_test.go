@@ -65,7 +65,7 @@ Installation:
     Guest:
       Kubernetes:
         API:
-          EndpointBase: test-domain
+          EndpointBase: k8s.test-domain
     Secret:
       CertOperator:
         SecretYaml: |
@@ -108,7 +108,7 @@ Installation:
     Guest:
       Kubernetes:
         API:
-          EndpointBase: test-domain
+          EndpointBase: k8s.test-domain
     Secret:
       CertOperator:
         SecretYaml: |
