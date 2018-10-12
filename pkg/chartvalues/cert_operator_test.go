@@ -10,17 +10,17 @@ func newCertOperatorConfigFromFilled(modifyFunc func(*CertOperatorConfig)) CertO
 	c := CertOperatorConfig{
 		ClusterName: "test-cluster",
 		ClusterRole: CertOperatorClusterRole{
-			BindingName: "cert-operator",
-			Name:        "cert-operator",
+			BindingName: "test-cert-operator",
+			Name:        "test-cert-operator",
 		},
 		ClusterRolePSP: CertOperatorClusterRole{
-			BindingName: "cert-operator-psp",
-			Name:        "cert-operator-psp",
+			BindingName: "test-cert-operator-psp",
+			Name:        "test-cert-operator-psp",
 		},
 		CommonDomain:       "test-domain",
 		RegistryPullSecret: "test-registry-pull-secret",
 		PSP: CertOperatorPSP{
-			Name: "cert-test-psp",
+			Name: "test-cert-operator-psp",
 		},
 		Vault: CertOperatorVault{
 			Token: "test-token",
@@ -47,6 +47,49 @@ func Test_NewCertOperator(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {}),
+			expectedValues: `clusterRoleBindingName: test-cert-operator
+clusterRoleBindingNamePSP: test-cert-operator-psp
+clusterRoleName: test-cert-operator
+clusterRoleNamePSP: test-cert-operator-psp
+Installation:
+  V1:
+    Auth:
+      Vault:
+        Address: http://vault.default.svc.cluster.local:8200
+        CA:
+          TTL: 1440h
+    GiantSwarm:
+      CertOperator:
+        CRD:
+          LabelSelector: 'giantswarm.io/cluster=test-cluster'
+    Guest:
+      Kubernetes:
+        API:
+          EndpointBase: test-domain
+    Secret:
+      CertOperator:
+        SecretYaml: |
+          service:
+            vault:
+              config:
+                token: test-token
+      Registry:
+        PullSecret:
+          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+pspName: test-cert-operator-psp
+`,
+			errorMatcher: nil,
+		},
+		{
+			name: "case 2: non-default values set",
+			config: CertOperatorConfig{
+				ClusterName:        "test-cluster",
+				CommonDomain:       "test-domain",
+				RegistryPullSecret: "test-registry-pull-secret",
+				Vault: CertOperatorVault{
+					Token: "test-token",
+				},
+			},
 			expectedValues: `clusterRoleBindingName: cert-operator
 clusterRoleBindingNamePSP: cert-operator-psp
 clusterRoleName: cert-operator
@@ -76,9 +119,8 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
-pspName: cert-test-psp
+pspName: cert-operator-psp
 `,
-			errorMatcher: nil,
 		},
 	}
 
@@ -123,56 +165,21 @@ func Test_NewCertOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .ClusterRole.BindingName",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.ClusterRole.BindingName = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 2: invalid .ClusterRole.Name",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.ClusterRole.Name = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 3: invalid .ClusterRolePSP.BindingName",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.ClusterRolePSP.BindingName = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 4: invalid .ClusterRolePSP.Name",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.ClusterRolePSP.Name = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 5: invalid .CommonDomain",
+			name: "case 1: invalid .CommonDomain",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.CommonDomain = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .PSP.Name",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.PSP.Name = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 7: invalid .RegistryPullSecret",
+			name: "case 2: invalid .RegistryPullSecret",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .Vault.Token",
+			name: "case 3: invalid .Vault.Token",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.Vault.Token = ""
 			}),
