@@ -43,10 +43,10 @@ Installation:
     Secret:
       AzureOperator:
         CredentialDefault:
-          azure.azureoperator.clientid: {{ .Secret.AzureOperator.CredentialDefault.ClientID }}
-          azure.azureoperator.clientsecret: {{ .Secret.AzureOperator.CredentialDefault.ClientSecret }}
-          azure.azureoperator.subscriptionid: {{ .Secret.AzureOperator.CredentialDefault.SubscriptionID }}
-          azure.azureoperator.tenantid: {{ .Secret.AzureOperator.CredentialDefault.TenantID }}
+          clientid: {{ .Secret.AzureOperator.CredentialDefault.ClientID }}
+          clientsecret: {{ .Secret.AzureOperator.CredentialDefault.ClientSecret }}
+          subscriptionid: {{ .Secret.AzureOperator.CredentialDefault.SubscriptionID }}
+          tenantid: {{ .Secret.AzureOperator.CredentialDefault.TenantID }}
         SecretYaml: |
           service:
             azure:
