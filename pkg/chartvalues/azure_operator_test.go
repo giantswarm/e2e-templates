@@ -15,13 +15,19 @@ func newAzureOperatorConfigFromFilled(modifyFunc func(*AzureOperatorConfig)) Azu
 		},
 		Secret: AzureOperatorConfigSecret{
 			AzureOperator: AzureOperatorConfigSecretAzureOperator{
+				CredentialDefault: AzureOperatorConfigSecretAzureOperatorCredentialDefault{
+					ClientID:       "test-client-id",
+					ClientSecret:   "test-client-secret",
+					SubscriptionID: "test-subscription-id",
+					TenantID:       "test-tenant-id",
+				},
 				SecretYaml: AzureOperatorConfigSecretAzureOperatorSecretYaml{
 					Service: AzureOperatorConfigSecretAzureOperatorSecretYamlService{
 						Azure: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzure{
-							ClientID:      "test-client-id",
-							ClientSecret:  "test-client-secret",
-							SubsciptionID: "test-subscription-id",
-							TenantID:      "test-tenant-id",
+							ClientID:       "test-client-id",
+							ClientSecret:   "test-client-secret",
+							SubscriptionID: "test-subscription-id",
+							TenantID:       "test-tenant-id",
 							Template: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplate{
 								URI: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplateURI{
 									Version: "test-version",
@@ -102,6 +108,11 @@ Installation:
       Domain: quay.io
     Secret:
       AzureOperator:
+        CredentialDefault:
+          clientid: test-client-id
+          clientsecret: test-client-secret
+          subscriptionid: test-subscription-id
+          tenantid: test-tenant-id
         SecretYaml: |
           service:
             azure:
@@ -164,42 +175,70 @@ func Test_NewAzureOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.ClientID",
+			name: "case 1: invalid .Secret.AzureOperator.CredentialDefault.ClientID",
+			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
+				v.Secret.AzureOperator.CredentialDefault.ClientID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 2: invalid .Secret.AzureOperator.CredentialDefault.ClientSecret",
+			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
+				v.Secret.AzureOperator.CredentialDefault.ClientSecret = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 3: invalid .Secret.AzureOperator.CredentialDefault.SubscriptionID",
+			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
+				v.Secret.AzureOperator.CredentialDefault.SubscriptionID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 4: invalid .Secret.AzureOperator.CredentialDefault.TenantID",
+			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
+				v.Secret.AzureOperator.CredentialDefault.TenantID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 5: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.ClientID",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
 				v.Secret.AzureOperator.SecretYaml.Service.Azure.ClientID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.ClientSecret",
+			name: "case 6: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.ClientSecret",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
 				v.Secret.AzureOperator.SecretYaml.Service.Azure.ClientSecret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 3: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.SubsciptionID",
+			name: "case 7: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.SubscriptionID",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
-				v.Secret.AzureOperator.SecretYaml.Service.Azure.SubsciptionID = ""
+				v.Secret.AzureOperator.SecretYaml.Service.Azure.SubscriptionID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.TenantID",
+			name: "case 8: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.TenantID",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
 				v.Secret.AzureOperator.SecretYaml.Service.Azure.TenantID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.Template.URI.Version",
+			name: "case 9: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.Template.URI.Version",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
 				v.Secret.AzureOperator.SecretYaml.Service.Azure.Template.URI.Version = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .Secret.Registry.PullSecret.DockerConfigJSON",
+			name: "case 10: invalid .Secret.Registry.PullSecret.DockerConfigJSON",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
 				v.Secret.Registry.PullSecret.DockerConfigJSON = ""
 			}),
