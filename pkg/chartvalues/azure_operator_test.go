@@ -24,10 +24,10 @@ func newAzureOperatorConfigFromFilled(modifyFunc func(*AzureOperatorConfig)) Azu
 				SecretYaml: AzureOperatorConfigSecretAzureOperatorSecretYaml{
 					Service: AzureOperatorConfigSecretAzureOperatorSecretYamlService{
 						Azure: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzure{
-							ClientID:      "test-client-id",
-							ClientSecret:  "test-client-secret",
-							SubsciptionID: "test-subscription-id",
-							TenantID:      "test-tenant-id",
+							ClientID:       "test-client-id",
+							ClientSecret:   "test-client-secret",
+							SubscriptionID: "test-subscription-id",
+							TenantID:       "test-tenant-id",
 							Template: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplate{
 								URI: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplateURI{
 									Version: "test-version",
@@ -217,9 +217,9 @@ func Test_NewAzureOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.SubsciptionID",
+			name: "case 7: invalid .Secret.AzureOperator.SecretYaml.Service.Azure.SubscriptionID",
 			config: newAzureOperatorConfigFromFilled(func(v *AzureOperatorConfig) {
-				v.Secret.AzureOperator.SecretYaml.Service.Azure.SubsciptionID = ""
+				v.Secret.AzureOperator.SecretYaml.Service.Azure.SubscriptionID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},

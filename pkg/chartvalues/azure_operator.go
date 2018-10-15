@@ -45,11 +45,11 @@ type AzureOperatorConfigSecretAzureOperatorSecretYamlService struct {
 }
 
 type AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzure struct {
-	ClientID      string
-	ClientSecret  string
-	SubsciptionID string
-	TenantID      string
-	Template      AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplate
+	ClientID       string
+	ClientSecret   string
+	SubscriptionID string
+	TenantID       string
+	Template       AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplate
 }
 
 type AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzureTemplate struct {
@@ -92,8 +92,8 @@ func NewAzureOperator(config AzureOperatorConfig) (string, error) {
 	if config.Secret.AzureOperator.SecretYaml.Service.Azure.ClientSecret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AzureOperator.SecretYaml.Service.Azure.ClientSecret must not be empty", config)
 	}
-	if config.Secret.AzureOperator.SecretYaml.Service.Azure.SubsciptionID == "" {
-		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AzureOperator.SecretYaml.Service.Azure.SubsciptionID must not be empty", config)
+	if config.Secret.AzureOperator.SecretYaml.Service.Azure.SubscriptionID == "" {
+		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AzureOperator.SecretYaml.Service.Azure.SubscriptionID must not be empty", config)
 	}
 	if config.Secret.AzureOperator.SecretYaml.Service.Azure.TenantID == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Secret.AzureOperator.SecretYaml.Service.Azure.TenantID must not be empty", config)
