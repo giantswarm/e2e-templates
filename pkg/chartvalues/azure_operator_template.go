@@ -42,6 +42,11 @@ Installation:
       Domain: quay.io
     Secret:
       AzureOperator:
+        CredentialDefault:
+          azure.azureoperator.clientid: {{ .Secret.AzureOperator.CredentialDefault.ClientID }}
+          azure.azureoperator.clientsecret: {{ .Secret.AzureOperator.CredentialDefault.ClientSecret }}
+          azure.azureoperator.subscriptionid: {{ .Secret.AzureOperator.CredentialDefault.SubscriptionID }}
+          azure.azureoperator.tenantid: {{ .Secret.AzureOperator.CredentialDefault.TenantID }}
         SecretYaml: |
           service:
             azure:
