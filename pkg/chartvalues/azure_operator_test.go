@@ -109,10 +109,10 @@ Installation:
     Secret:
       AzureOperator:
         CredentialDefault:
-          azure.azureoperator.clientid: test-client-id
-          azure.azureoperator.clientsecret: test-client-secret
-          azure.azureoperator.subscriptionid: test-subscription-id
-          azure.azureoperator.tenantid: test-tenant-id
+          clientid: test-client-id
+          clientsecret: test-client-secret
+          subscriptionid: test-subscription-id
+          tenantid: test-tenant-id
         SecretYaml: |
           service:
             azure:
