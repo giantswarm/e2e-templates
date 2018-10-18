@@ -17,7 +17,7 @@ func newCertOperatorConfigFromFilled(modifyFunc func(*CertOperatorConfig)) CertO
 			BindingName: "test-cert-operator-psp",
 			Name:        "test-cert-operator-psp",
 		},
-		CommonDomain:       "test-domain",
+		CommonDomain:       "test-common-domain",
 		Namespace:          "test-namespace",
 		RegistryPullSecret: "test-registry-pull-secret",
 		PSP: CertOperatorPSP{
@@ -68,7 +68,7 @@ Installation:
     Guest:
       Kubernetes:
         API:
-          EndpointBase: k8s.test-domain
+          EndpointBase: k8s.test-common-domain
     Secret:
       CertOperator:
         SecretYaml: |
@@ -88,8 +88,7 @@ pspName: test-cert-operator-psp
 			name: "case 2: non-default values set",
 			config: CertOperatorConfig{
 				ClusterName:        "test-cluster",
-				CommonDomain:       "test-domain",
-				Namespace:          "test-namespace",
+				CommonDomain:       "test-common-domain",
 				RegistryPullSecret: "test-registry-pull-secret",
 				Vault: CertOperatorVault{
 					Token: "test-token",
@@ -114,7 +113,7 @@ Installation:
     Guest:
       Kubernetes:
         API:
-          EndpointBase: k8s.test-domain
+          EndpointBase: k8s.test-common-domain
     Secret:
       CertOperator:
         SecretYaml: |
@@ -125,7 +124,7 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
-namespace: test-namespace
+namespace: giantswarm
 pspName: cert-operator-psp
 `,
 		},
@@ -179,21 +178,14 @@ func Test_NewCertOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Namespace",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.Namespace = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 3: invalid .RegistryPullSecret",
+			name: "case 2: invalid .RegistryPullSecret",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .Vault.Token",
+			name: "case 3: invalid .Vault.Token",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.Vault.Token = ""
 			}),

@@ -8,6 +8,7 @@ import (
 
 func newNodeOperatorConfigFromFilled(modifyFunc func(*NodeOperatorConfig)) NodeOperatorConfig {
 	c := NodeOperatorConfig{
+		Namespace:          "test-namespace",
 		RegistryPullSecret: "test-registry-pull-secret",
 	}
 
@@ -31,14 +32,31 @@ func Test_NewNodeOperator(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newNodeOperatorConfigFromFilled(func(v *NodeOperatorConfig) {}),
-			expectedValues: `Installation:
+			expectedValues: `
+Installation:
   V1:
     Secret:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+namespace: test-namespace
 `,
 			errorMatcher: nil,
+		},
+		{
+			name: "case 2: non-default values set",
+			config: NodeOperatorConfig{
+				RegistryPullSecret: "test-registry-pull-secret",
+			},
+			expectedValues: `
+Installation:
+  V1:
+    Secret:
+      Registry:
+        PullSecret:
+          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+namespace: giantswarm
+`,
 		},
 	}
 

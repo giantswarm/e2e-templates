@@ -10,16 +10,17 @@ func newFlannelOperatorConfigFromFilled(modifyFunc func(*FlannelOperatorConfig))
 	c := FlannelOperatorConfig{
 		ClusterName: "test-cluster",
 		ClusterRole: FlannelOperatorClusterRole{
-			BindingName: "flannel-operator",
-			Name:        "flannel-operator",
+			BindingName: "test-flannel-operator",
+			Name:        "test-flannel-operator",
 		},
 		ClusterRolePSP: FlannelOperatorClusterRole{
-			BindingName: "flannel-operator-psp",
-			Name:        "flannel-operator-psp",
+			BindingName: "test-flannel-operator-psp",
+			Name:        "test-flannel-operator-psp",
 		},
+		Namespace:          "test-namespace",
 		RegistryPullSecret: "test-registry-pull-secret",
 		PSP: FlannelOperatorPSP{
-			Name: "flannel-test-psp",
+			Name: "test-psp",
 		},
 	}
 
@@ -43,10 +44,11 @@ func Test_NewFlannelOperator(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {}),
-			expectedValues: `clusterRoleBindingName: flannel-operator
-clusterRoleBindingNamePSP: flannel-operator-psp
-clusterRoleName: flannel-operator
-clusterRoleNamePSP: flannel-operator-psp
+			expectedValues: `
+clusterRoleBindingName: test-flannel-operator
+clusterRoleBindingNamePSP: test-flannel-operator-psp
+clusterRoleName: test-flannel-operator
+clusterRoleNamePSP: test-flannel-operator-psp
 Installation:
   V1:
     GiantSwarm:
@@ -57,9 +59,46 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
-pspName: flannel-test-psp
+namespace: test-namespace
+pspName: test-psp
 `,
 			errorMatcher: nil,
+		},
+		{
+			name: "case 2: non-default values set",
+			config: FlannelOperatorConfig{
+				ClusterName: "test-cluster",
+				ClusterRole: FlannelOperatorClusterRole{
+					BindingName: "test-flannel-operator",
+					Name:        "test-flannel-operator",
+				},
+				ClusterRolePSP: FlannelOperatorClusterRole{
+					BindingName: "test-flannel-operator-psp",
+					Name:        "test-flannel-operator-psp",
+				},
+				RegistryPullSecret: "test-registry-pull-secret",
+				PSP: FlannelOperatorPSP{
+					Name: "test-psp",
+				},
+			},
+			expectedValues: `
+clusterRoleBindingName: test-flannel-operator
+clusterRoleBindingNamePSP: test-flannel-operator-psp
+clusterRoleName: test-flannel-operator
+clusterRoleNamePSP: test-flannel-operator-psp
+Installation:
+  V1:
+    GiantSwarm:
+      FlannelOperator:
+        CRD:
+          LabelSelector: 'giantswarm.io/cluster=test-cluster'
+    Secret:
+      Registry:
+        PullSecret:
+          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+namespace: giantswarm
+pspName: test-psp
+`,
 		},
 	}
 
