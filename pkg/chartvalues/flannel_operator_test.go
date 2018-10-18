@@ -108,35 +108,35 @@ func Test_NewFlannelOperator_invalidConfigError(t *testing.T) {
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
 				v.ClusterRole.BindingName = ""
 			}),
-			errorMatcher: IsInvalidConfig,
+			errorMatcher: nil,
 		},
 		{
 			name: "case 2: invalid .ClusterRole.Name",
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
 				v.ClusterRole.Name = ""
 			}),
-			errorMatcher: IsInvalidConfig,
+			errorMatcher: nil,
 		},
 		{
 			name: "case 3: invalid .ClusterRolePSP.BindingName",
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
 				v.ClusterRolePSP.BindingName = ""
 			}),
-			errorMatcher: IsInvalidConfig,
+			errorMatcher: nil,
 		},
 		{
 			name: "case 4: invalid .ClusterRolePSP.Name",
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
 				v.ClusterRolePSP.Name = ""
 			}),
-			errorMatcher: IsInvalidConfig,
+			errorMatcher: nil,
 		},
 		{
 			name: "case 5: invalid .PSP.Name",
 			config: newFlannelOperatorConfigFromFilled(func(v *FlannelOperatorConfig) {
 				v.PSP.Name = ""
 			}),
-			errorMatcher: IsInvalidConfig,
+			errorMatcher: nil,
 		},
 		{
 			name: "case 6: invalid .RegistryPullSecret",
