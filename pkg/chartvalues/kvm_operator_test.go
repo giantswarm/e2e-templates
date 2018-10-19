@@ -10,16 +10,17 @@ func newKVMOperatorConfigFromFilled(modifyFunc func(*KVMOperatorConfig)) KVMOper
 	c := KVMOperatorConfig{
 		ClusterName: "test-cluster",
 		ClusterRole: KVMOperatorClusterRole{
-			BindingName: "kvm-operator",
-			Name:        "kvm-operator",
+			BindingName: "test-kvm-operator",
+			Name:        "test-kvm-operator",
 		},
 		ClusterRolePSP: KVMOperatorClusterRole{
-			BindingName: "kvm-operator-psp",
-			Name:        "kvm-operator-psp",
+			BindingName: "test-kvm-operator-psp",
+			Name:        "test-kvm-operator-psp",
 		},
+		Namespace:          "test-namespace",
 		RegistryPullSecret: "test-registry-pull-secret",
 		PSP: KVMOperatorPSP{
-			Name: "kvm-test-psp",
+			Name: "test-psp",
 		},
 	}
 
@@ -43,10 +44,11 @@ func Test_NewKVMOperator(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newKVMOperatorConfigFromFilled(func(v *KVMOperatorConfig) {}),
-			expectedValues: `clusterRoleBindingName: kvm-operator
-clusterRoleBindingNamePSP: kvm-operator-psp
-clusterRoleName: kvm-operator
-clusterRoleNamePSP: kvm-operator-psp
+			expectedValues: `
+clusterRoleBindingName: test-kvm-operator
+clusterRoleBindingNamePSP: test-kvm-operator-psp
+clusterRoleName: test-kvm-operator
+clusterRoleNamePSP: test-kvm-operator-psp
 Installation:
   V1:
     GiantSwarm:
@@ -71,9 +73,60 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
-pspName: kvm-test-psp
+namespace: test-namespace
+pspName: test-psp
 `,
 			errorMatcher: nil,
+		},
+		{
+			name: "case 2: non-default values set",
+			config: KVMOperatorConfig{
+				ClusterName: "test-cluster",
+				ClusterRole: KVMOperatorClusterRole{
+					BindingName: "test-kvm-operator",
+					Name:        "test-kvm-operator",
+				},
+				ClusterRolePSP: KVMOperatorClusterRole{
+					BindingName: "test-kvm-operator-psp",
+					Name:        "test-kvm-operator-psp",
+				},
+				RegistryPullSecret: "test-registry-pull-secret",
+				PSP: KVMOperatorPSP{
+					Name: "test-psp",
+				},
+			},
+			expectedValues: `
+clusterRoleBindingName: test-kvm-operator
+clusterRoleBindingNamePSP: test-kvm-operator-psp
+clusterRoleName: test-kvm-operator
+clusterRoleNamePSP: test-kvm-operator-psp
+Installation:
+  V1:
+    GiantSwarm:
+      KVMOperator:
+        CRD:
+          LabelSelector: 'giantswarm.io/cluster=test-cluster'
+    Guest:
+      SSH:
+        SSOPublicKey: 'test'
+      Kubernetes:
+        API:
+          Auth:
+            Provider:
+              OIDC:
+                ClientID: ""
+                IssueURL: ""
+                UsernameClaim: ""
+                GroupsClaim: ""
+      Update:
+        Enabled: true
+    Secret:
+      Registry:
+        PullSecret:
+          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+namespace: giantswarm
+pspName: test-psp
+`,
 		},
 	}
 

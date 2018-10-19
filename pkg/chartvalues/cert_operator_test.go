@@ -17,7 +17,8 @@ func newCertOperatorConfigFromFilled(modifyFunc func(*CertOperatorConfig)) CertO
 			BindingName: "test-cert-operator-psp",
 			Name:        "test-cert-operator-psp",
 		},
-		CommonDomain:       "test-domain",
+		CommonDomain:       "test-common-domain",
+		Namespace:          "test-namespace",
 		RegistryPullSecret: "test-registry-pull-secret",
 		PSP: CertOperatorPSP{
 			Name: "test-cert-operator-psp",
@@ -28,6 +29,7 @@ func newCertOperatorConfigFromFilled(modifyFunc func(*CertOperatorConfig)) CertO
 	}
 
 	modifyFunc(&c)
+
 	return c
 }
 
@@ -47,7 +49,8 @@ func Test_NewCertOperator(t *testing.T) {
 		{
 			name:   "case 1: all values set",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {}),
-			expectedValues: `clusterRoleBindingName: test-cert-operator
+			expectedValues: `
+clusterRoleBindingName: test-cert-operator
 clusterRoleBindingNamePSP: test-cert-operator-psp
 clusterRoleName: test-cert-operator
 clusterRoleNamePSP: test-cert-operator-psp
@@ -65,7 +68,7 @@ Installation:
     Guest:
       Kubernetes:
         API:
-          EndpointBase: k8s.test-domain
+          EndpointBase: k8s.test-common-domain
     Secret:
       CertOperator:
         SecretYaml: |
@@ -76,6 +79,7 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+namespace: test-namespace
 pspName: test-cert-operator-psp
 `,
 			errorMatcher: nil,
@@ -84,13 +88,14 @@ pspName: test-cert-operator-psp
 			name: "case 2: non-default values set",
 			config: CertOperatorConfig{
 				ClusterName:        "test-cluster",
-				CommonDomain:       "test-domain",
+				CommonDomain:       "test-common-domain",
 				RegistryPullSecret: "test-registry-pull-secret",
 				Vault: CertOperatorVault{
 					Token: "test-token",
 				},
 			},
-			expectedValues: `clusterRoleBindingName: cert-operator
+			expectedValues: `
+clusterRoleBindingName: cert-operator
 clusterRoleBindingNamePSP: cert-operator-psp
 clusterRoleName: cert-operator
 clusterRoleNamePSP: cert-operator-psp
@@ -108,7 +113,7 @@ Installation:
     Guest:
       Kubernetes:
         API:
-          EndpointBase: k8s.test-domain
+          EndpointBase: k8s.test-common-domain
     Secret:
       CertOperator:
         SecretYaml: |
@@ -119,6 +124,7 @@ Installation:
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
+namespace: giantswarm
 pspName: cert-operator-psp
 `,
 		},
