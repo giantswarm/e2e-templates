@@ -29,7 +29,7 @@ func Test_NewE2ESetupCerts(t *testing.T) {
 		{
 			name:           "case 0: invalid config",
 			config:         E2ESetupCertsConfig{},
-			expectedValues: ``,
+			expectedValues: "",
 			errorMatcher:   IsInvalidConfig,
 		},
 		{
