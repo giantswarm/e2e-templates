@@ -89,6 +89,7 @@ func Test_NewAWSOperator(t *testing.T) {
     Name: ci-aws-operator
     Provider:
       AWS:
+        AvailabilityZones: '[eu-central-1a eu-central-1b eu-central-1c]'
         Region: 'eu-central-1'
         DeleteLoggingBucket: true
         IncludeTags: true
@@ -160,6 +161,7 @@ func Test_NewAWSOperator(t *testing.T) {
     Name: ci-aws-operator
     Provider:
       AWS:
+        AvailabilityZones: '[eu-central-1a eu-central-1b eu-central-1c]'
         Region: 'eu-central-1'
         DeleteLoggingBucket: true
         IncludeTags: true
