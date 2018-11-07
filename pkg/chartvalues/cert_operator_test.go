@@ -8,16 +8,18 @@ import (
 
 func newCertOperatorConfigFromFilled(modifyFunc func(*CertOperatorConfig)) CertOperatorConfig {
 	c := CertOperatorConfig{
-		ClusterName: "test-cluster",
-		ClusterRole: CertOperatorClusterRole{
+		ClusterRole: CertOperatorConfigClusterRole{
 			BindingName: "test-cert-operator",
 			Name:        "test-cert-operator",
 		},
-		ClusterRolePSP: CertOperatorClusterRole{
+		ClusterRolePSP: CertOperatorConfigClusterRole{
 			BindingName: "test-cert-operator-psp",
 			Name:        "test-cert-operator-psp",
 		},
-		CommonDomain:       "test-common-domain",
+		CommonDomain: "test-common-domain",
+		CRD: CertOperatorConfigCRD{
+			LabelSelector: "test-label-selector",
+		},
 		Namespace:          "test-namespace",
 		RegistryPullSecret: "test-registry-pull-secret",
 		PSP: CertOperatorPSP{
@@ -64,7 +66,7 @@ Installation:
     GiantSwarm:
       CertOperator:
         CRD:
-          LabelSelector: 'giantswarm.io/cluster=test-cluster'
+          LabelSelector: test-label-selector
     Guest:
       Kubernetes:
         API:
@@ -87,7 +89,6 @@ pspName: test-cert-operator-psp
 		{
 			name: "case 2: non-default values set",
 			config: CertOperatorConfig{
-				ClusterName:        "test-cluster",
 				CommonDomain:       "test-common-domain",
 				RegistryPullSecret: "test-registry-pull-secret",
 				Vault: CertOperatorVault{
@@ -109,7 +110,7 @@ Installation:
     GiantSwarm:
       CertOperator:
         CRD:
-          LabelSelector: 'giantswarm.io/cluster=test-cluster'
+          LabelSelector:
     Guest:
       Kubernetes:
         API:
@@ -164,28 +165,21 @@ func Test_NewCertOperator_invalidConfigError(t *testing.T) {
 		errorMatcher func(err error) bool
 	}{
 		{
-			name: "case 0: invalid .ClusterName",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.ClusterName = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 1: invalid .CommonDomain",
+			name: "case 0: invalid .CommonDomain",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.CommonDomain = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .RegistryPullSecret",
+			name: "case 1: invalid .RegistryPullSecret",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 3: invalid .Vault.Token",
+			name: "case 2: invalid .Vault.Token",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.Vault.Token = ""
 			}),

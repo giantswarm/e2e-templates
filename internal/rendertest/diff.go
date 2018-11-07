@@ -3,6 +3,7 @@ package rendertest
 import (
 	"fmt"
 	"strings"
+	"unicode"
 )
 
 func Diff(a, b string) (int, string) {
@@ -15,8 +16,10 @@ func Diff(a, b string) (int, string) {
 	}
 
 	for i := 0; i < length; i++ {
-		if aSplit[i] != bSplit[i] {
-			return i + 1, fmt.Sprintf("a: %q b: %q", aSplit[i], bSplit[i])
+		a := strings.TrimRightFunc(aSplit[i], unicode.IsSpace)
+		b := strings.TrimRightFunc(bSplit[i], unicode.IsSpace)
+		if a != b {
+			return i + 1, fmt.Sprintf("a: %q b: %q", a, b)
 		}
 	}
 
