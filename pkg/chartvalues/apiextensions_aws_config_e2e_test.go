@@ -14,9 +14,12 @@ func newAPIExtensionsAWSConfigE2EConfigFromFilled(modifyFunc func(*APIExtensions
 		VersionBundleVersion: "test-version-bundle-version",
 
 		AWS: APIExtensionsAWSConfigE2EConfigAWS{
-			Region:            "test-region",
 			APIHostedZone:     "test-api-hosted-zone",
 			IngressHostedZone: "test-ingress-hosted-zone",
+			NetworkCIDR:       "test-network-cidr",
+			PrivateSubnetCIDR: "test-private-subnet-cidr",
+			PublicSubnetCIDR:  "test-public-subnet-cidr",
+			Region:            "test-region",
 			RouteTable0:       "test-route-table-0",
 			RouteTable1:       "test-route-table-1",
 			VPCPeerID:         "test-vpc-peer-id",
@@ -49,9 +52,9 @@ clusterVersion: v_0_1_0
 sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
-  networkCIDR: "10.12.0.0/24"
-  privateSubnetCIDR: "10.12.0.0/25"
-  publicSubnetCIDR: "10.12.0.128/25"
+  networkCIDR: test-network-cidr
+  privateSubnetCIDR: test-private-subnet-cidr
+  publicSubnetCIDR: test-public-subnet-cidr
   region: test-region
   apiHostedZone: test-api-hosted-zone
   ingressHostedZone: test-ingress-hosted-zone
@@ -72,9 +75,9 @@ clusterVersion: v_0_1_0
 sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
-  networkCIDR: "10.12.0.0/24"
-  privateSubnetCIDR: "10.12.0.0/25"
-  publicSubnetCIDR: "10.12.0.128/25"
+  networkCIDR: test-network-cidr
+  privateSubnetCIDR: test-private-subnet-cidr
+  publicSubnetCIDR: test-public-subnet-cidr
   region: test-region
   apiHostedZone: test-api-hosted-zone
   ingressHostedZone: test-ingress-hosted-zone
@@ -148,42 +151,63 @@ func Test_NewAPIExtensionsAWSConfigE2E_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .AWS.Region",
-			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				v.AWS.Region = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 5: invalid .AWS.APIHostedZone",
+			name: "case 4: invalid .AWS.APIHostedZone",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.APIHostedZone = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .AWS.IngressHostedZone",
+			name: "case 5: invalid .AWS.IngressHostedZone",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.IngressHostedZone = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .AWS.RouteTable0",
+			name: "case 6: invalid .AWS.NetworkCIDR",
+			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
+				v.AWS.NetworkCIDR = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 7: invalid .AWS.PrivateSubnetCIDR",
+			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
+				v.AWS.PrivateSubnetCIDR = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 8: invalid .AWS.PublicSubnetCIDR",
+			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
+				v.AWS.PublicSubnetCIDR = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 9: invalid .AWS.Region",
+			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
+				v.AWS.Region = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 10: invalid .AWS.RouteTable0",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable0 = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .AWS.RouteTable1",
+			name: "case 11: invalid .AWS.RouteTable1",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable1 = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 9: invalid .AWS.VPCPeerID",
+			name: "case 12: invalid .AWS.VPCPeerID",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.VPCPeerID = ""
 			}),
