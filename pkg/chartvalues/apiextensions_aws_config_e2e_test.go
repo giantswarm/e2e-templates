@@ -67,7 +67,9 @@ aws:
 		{
 			name: "case 2: all optional values left",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				// Placeholder. No default values for this template yet.
+				v.AWS.NetworkCIDR = ""
+				v.AWS.PrivateSubnetCIDR = ""
+				v.AWS.PublicSubnetCIDR = ""
 			}),
 			expectedValues: `commonDomain: test-common-domain
 clusterName: test-cluster-name
@@ -75,9 +77,9 @@ clusterVersion: v_0_1_0
 sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
-  networkCIDR: test-network-cidr
-  privateSubnetCIDR: test-private-subnet-cidr
-  publicSubnetCIDR: test-public-subnet-cidr
+  networkCIDR:
+  privateSubnetCIDR:
+  publicSubnetCIDR:
   region: test-region
   apiHostedZone: test-api-hosted-zone
   ingressHostedZone: test-ingress-hosted-zone
@@ -165,49 +167,28 @@ func Test_NewAPIExtensionsAWSConfigE2E_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .AWS.NetworkCIDR",
-			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				v.AWS.NetworkCIDR = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 7: invalid .AWS.PrivateSubnetCIDR",
-			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				v.AWS.PrivateSubnetCIDR = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 8: invalid .AWS.PublicSubnetCIDR",
-			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				v.AWS.PublicSubnetCIDR = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 9: invalid .AWS.Region",
+			name: "case 6: invalid .AWS.Region",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.Region = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 10: invalid .AWS.RouteTable0",
+			name: "case 7: invalid .AWS.RouteTable0",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable0 = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 11: invalid .AWS.RouteTable1",
+			name: "case 8: invalid .AWS.RouteTable1",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable1 = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 12: invalid .AWS.VPCPeerID",
+			name: "case 9: invalid .AWS.VPCPeerID",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.VPCPeerID = ""
 			}),
