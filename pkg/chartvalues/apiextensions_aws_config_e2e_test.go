@@ -77,9 +77,9 @@ clusterVersion: v_0_1_0
 sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
-  networkCIDR:
-  privateSubnetCIDR:
-  publicSubnetCIDR:
+  networkCIDR: 10.12.0.0/24
+  privateSubnetCIDR: 10.12.0.0/25
+  publicSubnetCIDR: 10.12.0.128/25
   region: test-region
   apiHostedZone: test-api-hosted-zone
   ingressHostedZone: test-ingress-hosted-zone

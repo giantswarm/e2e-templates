@@ -53,6 +53,15 @@ func NewAPIExtensionsAWSConfigE2E(config APIExtensionsAWSConfigE2EConfig) (strin
 	if config.AWS.IngressHostedZone == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.AWS.IngressHostedZone must not be empty", config)
 	}
+	if config.AWS.NetworkCIDR == "" {
+		config.AWS.NetworkCIDR = "10.12.0.0/24"
+	}
+	if config.AWS.PrivateSubnetCIDR == "" {
+		config.AWS.PrivateSubnetCIDR = "10.12.0.0/25"
+	}
+	if config.AWS.PublicSubnetCIDR == "" {
+		config.AWS.PublicSubnetCIDR = "10.12.0.128/25"
+	}
 	if config.AWS.Region == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.AWS.Region must not be empty", config)
 	}
