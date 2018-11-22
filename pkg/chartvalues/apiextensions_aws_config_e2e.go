@@ -19,13 +19,13 @@ type APIExtensionsAWSConfigE2EConfigAWS struct {
 	APIHostedZone     string
 	IngressHostedZone string
 	// NetworkCIDR is deprecated and optional meanwhile. When left empty IPAM is
-	// activated.
+	// activated. We still need defaults for older versions.
 	NetworkCIDR string
 	// PrivateSubnetCIDR is deprecated and optional meanwhile. When left empty
-	// IPAM is activated.
+	// IPAM is activated. We still need defaults for older versions.
 	PrivateSubnetCIDR string
 	// PublicSubnetCIDR is deprecated and optional meanwhile. When left empty IPAM
-	// is activated.
+	// is activated. We still need defaults for older versions.
 	PublicSubnetCIDR string
 	Region           string
 	RouteTable0      string
