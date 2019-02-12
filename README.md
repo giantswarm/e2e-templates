@@ -3,4 +3,4 @@
 # e2e-templates
 
 **NOTE:** package `pkg/e2etemplates` is deprecated. No new templates should be
-added there.
+added there. They should be put in `pkg/chartvalues` instead.
