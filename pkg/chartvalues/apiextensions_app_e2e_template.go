@@ -4,6 +4,7 @@ const apiExtensionsAppE2ETemplate = `
 app:
   name: "{{ .App.Name }}"
   namespace: "{{ .App.Namespace }}"
+  catalog: "{{ .App.Catalog }}"
   config:
     configMap:
       name: "{{ .App.Config.ConfigMap.Name }}"
@@ -11,6 +12,7 @@ app:
     secret:
       name: "{{ .App.Config.Secret.Name }}"
       namespace: "{{ .App.Config.Secret.Namespace }}"
+  version: "{{ .App.Version }}"
 
 appCatalog:
   title: "{{ .AppCatalog.Title }}"

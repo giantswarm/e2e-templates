@@ -11,6 +11,7 @@ func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2E
 		App: APIExtensionsAppE2EConfigApp{
 			Name:      "test-app",
 			Namespace: "default",
+			Catalog:   "test-app-catalog",
 			Config: APIExtensionsAppE2EConfigAppConfig{
 				ConfigMap: APIExtensionsAppE2EConfigAppConfigConfigMap{
 					Name:      "test-app-values",
@@ -21,6 +22,7 @@ func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2E
 					Namespace: "default",
 				},
 			},
+			Version: "1.0.0",
 		},
 		AppCatalog: APIExtensionsAppE2EConfigAppCatalog{
 			Title:       "test-app-catalog",
@@ -68,6 +70,7 @@ func Test_NewAPIExtensionsAppE2E(t *testing.T) {
 app:
   name: "test-app"
   namespace: "default"
+  catalog: "test-app-catalog"
   config:
     configMap:
       name: "test-app-values"
@@ -75,6 +78,7 @@ app:
     secret:
       name: "test-app-secrets"
       namespace: "default"
+  version: "1.0.0"
 
 appCatalog:
   title: "test-app-catalog"
@@ -134,28 +138,42 @@ func Test_NewAPIExtensionsAppE2E_invalidConfigError(t *testing.T) {
 		errorMatcher func(err error) bool
 	}{
 		{
-			name: "case 0: invalid .App.Name",
+			name: "case 0: invalid .App.Catalog",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.App.Catalog = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 1: invalid .App.Name",
 			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
 				v.App.Name = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .App.Namespace",
+			name: "case 2: invalid .App.Namespace",
 			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
 				v.App.Namespace = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .AppOperator.Version",
+			name: "case 3: invalid .App.Version",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.App.Version = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 4: invalid .AppOperator.Version",
 			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
 				v.AppOperator.Version = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 3: invalid .Namespace",
+			name: "case 5: invalid .Namespace",
 			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
 				v.Namespace = ""
 			}),
