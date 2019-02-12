@@ -60,7 +60,7 @@ type APIExtensionsAppE2EConfigSecret struct {
 }
 
 // NewAPIExtensionsAppE2E renders values required by
-// apiextensions-azure-config-e2e-chart.
+// apiextensions-app-config-e2e-chart.
 func NewAPIExtensionsAppE2E(config APIExtensionsAppE2EConfig) (string, error) {
 	if config.App.Name == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.App.Name must not be empty", config)

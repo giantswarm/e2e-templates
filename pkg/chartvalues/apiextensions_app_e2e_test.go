@@ -130,40 +130,33 @@ secret:
 func Test_NewAPIExtensionsAppE2E_invalidConfigError(t *testing.T) {
 	testCases := []struct {
 		name         string
-		config       APIExtensionsChartE2EConfig
+		config       APIExtensionsAppE2EConfig
 		errorMatcher func(err error) bool
 	}{
 		{
-			name: "case 0: invalid .Chart.Name",
-			config: newAPIExtensionsChartE2EConfigFromFilled(func(v *APIExtensionsChartE2EConfig) {
-				v.Chart.Name = ""
+			name: "case 0: invalid .App.Name",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.App.Name = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .Chart.Namespace",
-			config: newAPIExtensionsChartE2EConfigFromFilled(func(v *APIExtensionsChartE2EConfig) {
-				v.Chart.Namespace = ""
+			name: "case 1: invalid .App.Namespace",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.App.Namespace = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Chart.TarballURL",
-			config: newAPIExtensionsChartE2EConfigFromFilled(func(v *APIExtensionsChartE2EConfig) {
-				v.Chart.TarballURL = ""
+			name: "case 2: invalid .AppOperator.Version",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppOperator.Version = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 3: invalid .ChartOperator.Version",
-			config: newAPIExtensionsChartE2EConfigFromFilled(func(v *APIExtensionsChartE2EConfig) {
-				v.ChartOperator.Version = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 4: invalid .Namespace",
-			config: newAPIExtensionsChartE2EConfigFromFilled(func(v *APIExtensionsChartE2EConfig) {
+			name: "case 3: invalid .Namespace",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
 				v.Namespace = ""
 			}),
 			errorMatcher: IsInvalidConfig,
@@ -172,7 +165,7 @@ func Test_NewAPIExtensionsAppE2E_invalidConfigError(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := NewAPIExtensionsChartE2E(tc.config)
+			_, err := NewAPIExtensionsAppE2E(tc.config)
 
 			switch {
 			case err == nil && tc.errorMatcher == nil:
