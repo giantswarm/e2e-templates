@@ -25,6 +25,7 @@ func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2E
 			Version: "1.0.0",
 		},
 		AppCatalog: APIExtensionsAppE2EConfigAppCatalog{
+			Name:        "test-app-catalog",
 			Title:       "test-app-catalog",
 			Description: "giantswarm app catalog",
 			LogoURL:     "http://giantswarm.logo.catalog.png",
@@ -81,6 +82,7 @@ app:
   version: "1.0.0"
 
 appCatalog:
+  name: "test-app-catalog"
   title: "test-app-catalog"
   description: "giantswarm app catalog"
   logoURL: "http://giantswarm.logo.catalog.png"
