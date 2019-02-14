@@ -25,6 +25,7 @@ func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2E
 			Version: "1.0.0",
 		},
 		AppCatalog: APIExtensionsAppE2EConfigAppCatalog{
+			Name:        "test-app-catalog",
 			Title:       "test-app-catalog",
 			Description: "giantswarm app catalog",
 			LogoURL:     "http://giantswarm.logo.catalog.png",
@@ -81,6 +82,7 @@ app:
   version: "1.0.0"
 
 appCatalog:
+  name: "test-app-catalog"
   title: "test-app-catalog"
   description: "giantswarm app catalog"
   logoURL: "http://giantswarm.logo.catalog.png"
@@ -176,6 +178,27 @@ func Test_NewAPIExtensionsAppE2E_invalidConfigError(t *testing.T) {
 			name: "case 5: invalid .Namespace",
 			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
 				v.Namespace = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 6: invalid .AppCatalog.Name",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppCatalog.Name = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 7: invalid .AppCatalog.Storage.Type",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppCatalog.Storage.Type = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 8: invalid .AppCatalog.Storage.URL",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppCatalog.Storage.URL = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
