@@ -181,6 +181,27 @@ func Test_NewAPIExtensionsAppE2E_invalidConfigError(t *testing.T) {
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
+		{
+			name: "case 6: invalid .AppCatalog.Name",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppCatalog.Name = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 7: invalid .AppCatalog.Storage.Type",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppCatalog.Storage.Type = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 8: invalid .AppCatalog.Storage.URL",
+			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {
+				v.AppCatalog.Storage.URL = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
 	}
 
 	for _, tc := range testCases {
