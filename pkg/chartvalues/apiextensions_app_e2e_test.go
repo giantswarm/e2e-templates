@@ -22,6 +22,13 @@ func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2E
 					Namespace: "default",
 				},
 			},
+			KubeConfig: APIExtensionsAppE2EConfigAppKubeConfig{
+				InCluster: false,
+				Secret: APIExtensionsAppE2EConfigAppConfigKubeConfigSecret{
+					Name:      "test-kubeconfig-secret",
+					Namespace: "default",
+				},
+			},
 			Version: "1.0.0",
 		},
 		AppCatalog: APIExtensionsAppE2EConfigAppCatalog{
@@ -78,6 +85,11 @@ app:
       namespace: "default"
     secret:
       name: "test-app-secrets"
+      namespace: "default"
+  kubeConfig:
+    inCluster: "false"
+    secret:
+      name: "test-kubeconfig-secret"
       namespace: "default"
   version: "1.0.0"
 
