@@ -13,7 +13,7 @@ app:
       name: "{{ .App.Config.Secret.Name }}"
       namespace: "{{ .App.Config.Secret.Namespace }}"
   kubeConfig:
-    inCluster: "{{ .App.KubeConfig.InCluster }}"
+    inCluster: {{ .App.KubeConfig.InCluster }}
     secret:
       name: "{{ .App.KubeConfig.Secret.Name }}"
       namespace: "{{ .App.KubeConfig.Secret.Namespace }}"

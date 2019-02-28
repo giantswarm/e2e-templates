@@ -87,7 +87,7 @@ app:
       name: "test-app-secrets"
       namespace: "default"
   kubeConfig:
-    inCluster: "false"
+    inCluster: false
     secret:
       name: "test-kubeconfig-secret"
       namespace: "default"
