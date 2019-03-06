@@ -98,6 +98,7 @@ func Test_NewAWSOperator(t *testing.T) {
         IncludeTags: true
         Route53:
           Enabled: true
+        RouteTables: 'gauss_private_0,gauss_private_1'
         Encrypter: 'vault'
         TrustedAdvisor:
           Enabled: false
@@ -173,6 +174,7 @@ func Test_NewAWSOperator(t *testing.T) {
         IncludeTags: true
         Route53:
           Enabled: true
+        RouteTables: 'gauss_private_0,gauss_private_1'
         Encrypter: 'kms'
         TrustedAdvisor:
           Enabled: false
