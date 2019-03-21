@@ -48,7 +48,6 @@ func Test_NewAPIExtensionsAWSConfigE2E(t *testing.T) {
 			expectedValues: `commonDomain: test-common-domain
 clusterName: test-cluster-name
 clusterVersion: v_0_1_0
-sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
   networkCIDR: test-network-cidr
@@ -73,7 +72,6 @@ aws:
 			expectedValues: `commonDomain: test-common-domain
 clusterName: test-cluster-name
 clusterVersion: v_0_1_0
-sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
   networkCIDR: 10.12.0.0/24
