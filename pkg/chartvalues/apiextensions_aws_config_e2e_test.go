@@ -10,7 +10,6 @@ func newAPIExtensionsAWSConfigE2EConfigFromFilled(modifyFunc func(*APIExtensions
 	c := APIExtensionsAWSConfigE2EConfig{
 		CommonDomain:         "test-common-domain",
 		ClusterName:          "test-cluster-name",
-		SSHPublicKey:         "test-ssh-public-key",
 		VersionBundleVersion: "test-version-bundle-version",
 
 		AWS: APIExtensionsAWSConfigE2EConfigAWS{
@@ -49,7 +48,6 @@ func Test_NewAPIExtensionsAWSConfigE2E(t *testing.T) {
 			expectedValues: `commonDomain: test-common-domain
 clusterName: test-cluster-name
 clusterVersion: v_0_1_0
-sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
   networkCIDR: test-network-cidr
@@ -74,7 +72,6 @@ aws:
 			expectedValues: `commonDomain: test-common-domain
 clusterName: test-cluster-name
 clusterVersion: v_0_1_0
-sshPublicKey: test-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 aws:
   networkCIDR: 10.12.0.0/24
@@ -139,56 +136,49 @@ func Test_NewAPIExtensionsAWSConfigE2E_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .SSHPublicKey",
-			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				v.SSHPublicKey = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 3: invalid .VersionBundleVersion",
+			name: "case 2: invalid .VersionBundleVersion",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.VersionBundleVersion = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .AWS.APIHostedZone",
+			name: "case 3: invalid .AWS.APIHostedZone",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.APIHostedZone = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .AWS.IngressHostedZone",
+			name: "case 4: invalid .AWS.IngressHostedZone",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.IngressHostedZone = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .AWS.Region",
+			name: "case 5: invalid .AWS.Region",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.Region = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .AWS.RouteTable0",
+			name: "case 6: invalid .AWS.RouteTable0",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable0 = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .AWS.RouteTable1",
+			name: "case 7: invalid .AWS.RouteTable1",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable1 = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 9: invalid .AWS.VPCPeerID",
+			name: "case 8: invalid .AWS.VPCPeerID",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.VPCPeerID = ""
 			}),
