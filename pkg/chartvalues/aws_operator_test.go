@@ -10,8 +10,9 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 	c := AWSOperatorConfig{
 		Provider: AWSOperatorConfigProvider{
 			AWS: AWSOperatorConfigProviderAWS{
-				Encrypter: "vault",
-				Region:    "eu-central-1",
+				Encrypter:       "vault",
+				Region:          "eu-central-1",
+				RouteTableNames: "foo,bar",
 			},
 		},
 		Secret: AWSOperatorConfigSecret{
@@ -98,7 +99,7 @@ func Test_NewAWSOperator(t *testing.T) {
         IncludeTags: true
         Route53:
           Enabled: true
-        RouteTableNames: 'gauss_private_0,gauss_private_1'
+        RouteTableNames: 'foo,bar'
         Encrypter: 'vault'
         TrustedAdvisor:
           Enabled: false
@@ -174,7 +175,7 @@ func Test_NewAWSOperator(t *testing.T) {
         IncludeTags: true
         Route53:
           Enabled: true
-        RouteTableNames: 'gauss_private_0,gauss_private_1'
+        RouteTableNames: 'foo,bar'
         Encrypter: 'kms'
         TrustedAdvisor:
           Enabled: false
@@ -250,14 +251,21 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .Secret.AWSOperator.CredentialDefault.AdminARN",
+			name: "case 1: invalid .Provider.AWS.RouteTableNames",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
+				v.Provider.AWS.RouteTableNames = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 2: invalid .Secret.AWSOperator.CredentialDefault.AdminARN",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.CredentialDefault.AdminARN = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Secret.AWSOperator.CredentialDefault.AWSOperatorARN",
+			name: "case 3: invalid .Secret.AWSOperator.CredentialDefault.AWSOperatorARN",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.CredentialDefault.AWSOperatorARN = ""
 			}),
@@ -265,42 +273,42 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 		},
 
 		{
-			name: "case 3: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
+			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .Secret.AWSOperator.IDRSAPub",
+			name: "case 5: invalid .Secret.AWSOperator.IDRSAPub",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.IDRSAPub = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
+			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
+			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
+			name: "case 8: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .RegistryPullSecret",
+			name: "case 9: invalid .RegistryPullSecret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
