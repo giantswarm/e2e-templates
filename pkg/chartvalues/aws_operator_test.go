@@ -21,7 +21,6 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 					AdminARN:       "test-admin-arn",
 					AWSOperatorARN: "test-awsoperator-arn",
 				},
-				IDRSAPub: "test-idrsa-pub",
 				SecretYaml: AWSOperatorConfigSecretAWSOperatorSecretYaml{
 					Service: AWSOperatorConfigSecretAWSOperatorSecretYamlService{
 						AWS: AWSOperatorConfigSecretAWSOperatorSecretYamlServiceAWS{
@@ -110,7 +109,6 @@ func Test_NewAWSOperator(t *testing.T) {
         CredentialDefault:
           AdminARN: 'test-admin-arn'
           AWSOperatorARN: 'test-awsoperator-arn'
-        IDRSAPub: test-idrsa-pub
         SecretYaml: |
           service:
             aws:
@@ -186,7 +184,6 @@ func Test_NewAWSOperator(t *testing.T) {
         CredentialDefault:
           AdminARN: 'test-admin-arn'
           AWSOperatorARN: 'test-awsoperator-arn'
-        IDRSAPub: test-idrsa-pub
         SecretYaml: |
           service:
             aws:
@@ -276,13 +273,6 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 5: invalid .Secret.AWSOperator.IDRSAPub",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Secret.AWSOperator.IDRSAPub = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
