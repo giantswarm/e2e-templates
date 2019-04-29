@@ -21,7 +21,6 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 					AdminARN:       "test-admin-arn",
 					AWSOperatorARN: "test-awsoperator-arn",
 				},
-				IDRSAPub: "test-idrsa-pub",
 				SecretYaml: AWSOperatorConfigSecretAWSOperatorSecretYaml{
 					Service: AWSOperatorConfigSecretAWSOperatorSecretYamlService{
 						AWS: AWSOperatorConfigSecretAWSOperatorSecretYamlServiceAWS{
@@ -110,7 +109,6 @@ func Test_NewAWSOperator(t *testing.T) {
         CredentialDefault:
           AdminARN: 'test-admin-arn'
           AWSOperatorARN: 'test-awsoperator-arn'
-        IDRSAPub: test-idrsa-pub
         SecretYaml: |
           service:
             aws:
@@ -186,7 +184,6 @@ func Test_NewAWSOperator(t *testing.T) {
         CredentialDefault:
           AdminARN: 'test-admin-arn'
           AWSOperatorARN: 'test-awsoperator-arn'
-        IDRSAPub: test-idrsa-pub
         SecretYaml: |
           service:
             aws:
@@ -280,35 +277,28 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .Secret.AWSOperator.IDRSAPub",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Secret.AWSOperator.IDRSAPub = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
+			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
+			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
+			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 9: invalid .RegistryPullSecret",
+			name: "case 8: invalid .RegistryPullSecret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.RegistryPullSecret = ""
 			}),
