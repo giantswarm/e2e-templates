@@ -13,6 +13,7 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 				Encrypter:       "vault",
 				Region:          "eu-central-1",
 				RouteTableNames: "foo,bar",
+				VPCPeerID:       "test-vpc-id",
 			},
 		},
 		Secret: AWSOperatorConfigSecret{
@@ -102,6 +103,7 @@ func Test_NewAWSOperator(t *testing.T) {
         Encrypter: 'vault'
         TrustedAdvisor:
           Enabled: false
+        VPCPeerID: 'test-vpc-id'
     Registry:
       Domain: quay.io
     Secret:
@@ -177,6 +179,7 @@ func Test_NewAWSOperator(t *testing.T) {
         Encrypter: 'kms'
         TrustedAdvisor:
           Enabled: false
+        VPCPeerID: 'test-vpc-id'
     Registry:
       Domain: quay.io
     Secret:
@@ -301,6 +304,13 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			name: "case 8: invalid .RegistryPullSecret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.RegistryPullSecret = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 9: invalid .Provider.AWS.VPCPeerID",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
+				v.Provider.AWS.VPCPeerID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
