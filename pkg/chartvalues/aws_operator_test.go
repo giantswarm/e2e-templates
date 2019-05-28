@@ -16,6 +16,7 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 				VPCPeerID:       "test-vpc-id",
 			},
 		},
+		RegistryPullSecret: "test-registry-pull-secret",
 		Secret: AWSOperatorConfigSecret{
 			AWSOperator: AWSOperatorConfigSecretAWSOperator{
 				CredentialDefault: AWSOperatorConfigSecretAWSOperatorCredentialDefault{
@@ -40,7 +41,9 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 				},
 			},
 		},
-		RegistryPullSecret: "test-registry-pull-secret",
+		SSH: AWSOperatorConfigSSH{
+			UserList: "test-user-list",
+		},
 	}
 
 	modifyFunc(&c)
@@ -69,6 +72,11 @@ func Test_NewAWSOperator(t *testing.T) {
       Vault:
         Address: http://vault.default.svc.cluster.local:8200
     Guest:
+      Calico:
+        CIDR: 16
+        Subnet: "192.168.0.0"
+      Docker:
+        CIDR: "172.17.0.1/16"
       IPAM:
         NetworkCIDR: "10.12.0.0/16"
         CIDRMask: 24
@@ -83,8 +91,10 @@ func Test_NewAWSOperator(t *testing.T) {
                 IssueURL: ""
                 UsernameClaim: ""
                 GroupsClaim: ""
+          ClusterIPRange: "172.31.0.0/24"
       SSH:
         SSOPublicKey: 'test'
+        UserList: 'test-user-list'
       Update:
         Enabled: true
     Name: ci-aws-operator
@@ -122,7 +132,6 @@ func Test_NewAWSOperator(t *testing.T) {
                 id: 'test-host-access-key-id'
                 secret: 'test-host-access-key-secret'
                 token: 'test-host-access-key-token'
-
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
@@ -145,6 +154,11 @@ func Test_NewAWSOperator(t *testing.T) {
       Vault:
         Address: http://vault.default.svc.cluster.local:8200
     Guest:
+      Calico:
+        CIDR: 16
+        Subnet: "192.168.0.0"
+      Docker:
+        CIDR: "172.17.0.1/16"
       IPAM:
         NetworkCIDR: "10.12.0.0/16"
         CIDRMask: 24
@@ -159,8 +173,10 @@ func Test_NewAWSOperator(t *testing.T) {
                 IssueURL: ""
                 UsernameClaim: ""
                 GroupsClaim: ""
+          ClusterIPRange: "172.31.0.0/24"
       SSH:
         SSOPublicKey: 'test'
+        UserList: 'test-user-list'
       Update:
         Enabled: true
     Name: ci-aws-operator
@@ -198,7 +214,6 @@ func Test_NewAWSOperator(t *testing.T) {
                 id: 'test-host-access-key-id'
                 secret: 'test-host-access-key-secret'
                 token: ''
-
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
@@ -258,14 +273,28 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Secret.AWSOperator.CredentialDefault.AdminARN",
+			name: "case 2: invalid .Provider.AWS.VPCPeerID",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
+				v.Provider.AWS.VPCPeerID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 3: invalid .RegistryPullSecret",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
+				v.RegistryPullSecret = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 4: invalid .Secret.AWSOperator.CredentialDefault.AdminARN",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.CredentialDefault.AdminARN = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 3: invalid .Secret.AWSOperator.CredentialDefault.AWSOperatorARN",
+			name: "case 5: invalid .Secret.AWSOperator.CredentialDefault.AWSOperatorARN",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.CredentialDefault.AWSOperatorARN = ""
 			}),
@@ -273,44 +302,37 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 		},
 
 		{
-			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
+			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
+			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
+			name: "case 8: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
+			name: "case 9: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .RegistryPullSecret",
+			name: "case 10: invalid .SSH.UserList",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.RegistryPullSecret = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 9: invalid .Provider.AWS.VPCPeerID",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Provider.AWS.VPCPeerID = ""
+				v.SSH.UserList = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
