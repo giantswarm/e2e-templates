@@ -92,6 +92,8 @@ func Test_NewAWSOperator(t *testing.T) {
                 UsernameClaim: ""
                 GroupsClaim: ""
           ClusterIPRange: "172.31.0.0/24"
+        Kubelet:
+          ImagePullProgressDeadline: 1m
       SSH:
         SSOPublicKey: 'test'
         UserList: 'test-user-list'
@@ -174,6 +176,8 @@ func Test_NewAWSOperator(t *testing.T) {
                 UsernameClaim: ""
                 GroupsClaim: ""
           ClusterIPRange: "172.31.0.0/24"
+        Kubelet:
+          ImagePullProgressDeadline: 1m
       SSH:
         SSOPublicKey: 'test'
         UserList: 'test-user-list'
