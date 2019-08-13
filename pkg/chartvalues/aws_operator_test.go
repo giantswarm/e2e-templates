@@ -19,10 +19,6 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 		RegistryPullSecret: "test-registry-pull-secret",
 		Secret: AWSOperatorConfigSecret{
 			AWSOperator: AWSOperatorConfigSecretAWSOperator{
-				CredentialDefault: AWSOperatorConfigSecretAWSOperatorCredentialDefault{
-					AdminARN:       "test-admin-arn",
-					AWSOperatorARN: "test-awsoperator-arn",
-				},
 				SecretYaml: AWSOperatorConfigSecretAWSOperatorSecretYaml{
 					Service: AWSOperatorConfigSecretAWSOperatorSecretYamlService{
 						AWS: AWSOperatorConfigSecretAWSOperatorSecretYamlServiceAWS{
@@ -120,9 +116,6 @@ func Test_NewAWSOperator(t *testing.T) {
       Domain: quay.io
     Secret:
       AWSOperator:
-        CredentialDefault:
-          AdminARN: 'test-admin-arn'
-          AWSOperatorARN: 'test-awsoperator-arn'
         SecretYaml: |
           service:
             aws:
@@ -204,9 +197,6 @@ func Test_NewAWSOperator(t *testing.T) {
       Domain: quay.io
     Secret:
       AWSOperator:
-        CredentialDefault:
-          AdminARN: 'test-admin-arn'
-          AWSOperatorARN: 'test-awsoperator-arn'
         SecretYaml: |
           service:
             aws:
@@ -291,50 +281,35 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 4: invalid .Secret.AWSOperator.CredentialDefault.AdminARN",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Secret.AWSOperator.CredentialDefault.AdminARN = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 5: invalid .Secret.AWSOperator.CredentialDefault.AWSOperatorARN",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Secret.AWSOperator.CredentialDefault.AWSOperatorARN = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-
-		{
-			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
+			name: "case 4: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
+			name: "case 5: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.AccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 8: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
+			name: "case 6: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.ID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 9: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
+			name: "case 7: invalid .Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Secret.AWSOperator.SecretYaml.Service.AWS.HostAccessKey.Secret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 10: invalid .SSH.UserList",
+			name: "case 8: invalid .SSH.UserList",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.SSH.UserList = ""
 			}),
