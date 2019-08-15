@@ -10,6 +10,7 @@ func newCredentialdConfigFromFilled(modifyFunc func(*CredentialdConfig)) Credent
 	c := CredentialdConfig{
 		AWS: CredentialdConfigAWS{
 			CredentialDefault: CredentialdConfigAWSCredentialDefault{
+				AdminARN:       "test-aws-credential-default-admin-arn",
 				AWSOperatorARN: "test-aws-credential-default-aws-operator-arn",
 			},
 		},
@@ -56,6 +57,7 @@ Installation:
       Credentiald:
         AWS:
           CredentialDefault:
+            AdminARN: "test-aws-credential-default-admin-arn"
             AWSOperatorARN: "test-aws-credential-default-aws-operator-arn"
       Registry:
         PullSecret:
@@ -104,6 +106,7 @@ Installation:
       Credentiald:
         AWS:
           CredentialDefault:
+            AdminARN: "test-aws-credential-default-admin-arn"
             AWSOperatorARN: "test-aws-credential-default-aws-operator-arn"
       Registry:
         PullSecret:

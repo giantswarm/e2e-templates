@@ -19,6 +19,7 @@ type CredentialdConfigAWS struct {
 }
 
 type CredentialdConfigAWSCredentialDefault struct {
+	AdminARN       string
 	AWSOperatorARN string
 }
 
