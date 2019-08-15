@@ -156,7 +156,75 @@ func Test_NewCredentiald_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 1: invalid .RegistryPullSecret",
+			name: "case 1: .AWS and .Azure not set",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				v.AWS = CredentialdConfigAWS{}
+				v.Azure = CredentialdConfigAzure{}
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 2: invalid .AWS.CredentialDefault.AdminARN",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				// Unset Azure to bypass mutual exclusion validation.
+				v.Azure = CredentialdConfigAzure{}
+
+				v.AWS.CredentialDefault.AdminARN = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 3: invalid .AWS.CredentialDefault.AWSOperatorARN",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				// Unset Azure to bypass mutual exclusion validation.
+				v.Azure = CredentialdConfigAzure{}
+
+				v.AWS.CredentialDefault.AWSOperatorARN = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 4: invalid .Azure.CredentialDefault.ClientID",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				// Unset AWS to bypass mutual exclusion validation.
+				v.AWS = CredentialdConfigAWS{}
+
+				v.Azure.CredentialDefault.ClientID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 5: invalid .Azure.CredentialDefault.ClientSecret",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				// Unset AWS to bypass mutual exclusion validation.
+				v.AWS = CredentialdConfigAWS{}
+
+				v.Azure.CredentialDefault.ClientSecret = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 6: invalid .Azure.CredentialDefault.SubscriptionID",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				// Unset AWS to bypass mutual exclusion validation.
+				v.AWS = CredentialdConfigAWS{}
+
+				v.Azure.CredentialDefault.SubscriptionID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 7: invalid .Azure.CredentialDefault.TenantID",
+			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
+				// Unset AWS to bypass mutual exclusion validation.
+				v.AWS = CredentialdConfigAWS{}
+
+				v.Azure.CredentialDefault.TenantID = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 8: invalid .RegistryPullSecret",
 			config: newCredentialdConfigFromFilled(func(v *CredentialdConfig) {
 				// Unset AWS to bypass mutual exclusion validation.
 				v.AWS = CredentialdConfigAWS{}
