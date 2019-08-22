@@ -20,9 +20,9 @@ apps:
     version: "{{ .App.Version }}"
   # Added chart-operator app CR for e2e testing purpose.
   - name: "chart-operator"
-	namespace: "giantswarm"
-	catalog: "giantswarm-catalog"
-	kubeconfig:
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
       inCluster: "true"
     version: "0.9.0"
 
@@ -31,9 +31,9 @@ appCatalogs:
     title: "{{ .AppCatalog.Title }}"
     description: "{{ .AppCatalog.Description }}"
     logoURL: "{{ .AppCatalog.LogoURL }}"
-    storage: 
-      type: "{{ .AppCatalog.Storage.Type }}" 
-      url: "{{ .AppCatalog.Storage.URL }}" 
+    storage:
+      type: "{{ .AppCatalog.Storage.Type }}"
+      url: "{{ .AppCatalog.Storage.URL }}"
   - name: "giantswarm-catalog"
     title: "giantswarm-catalog"
     description: "giantswarm catalog"
@@ -46,11 +46,11 @@ appOperator:
   version: "{{ .AppOperator.Version }}"
 
 configMaps:
-  {{ .App.Config.ConfigMap.Name }}: 
+  {{ .App.Config.ConfigMap.Name }}:
     {{ .ConfigMap.ValuesYAML }}
 
 namespace: "{{ .Namespace }}"
 
 secrets:
-  {{ .App.Config.Secret.Name }}: 
+  {{ .App.Config.Secret.Name }}:
     {{ .Secret.ValuesYAML }}`
