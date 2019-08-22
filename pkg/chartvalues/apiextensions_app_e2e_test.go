@@ -94,9 +94,9 @@ apps:
     version: "1.0.0"
   # Added chart-operator app CR for e2e testing purpose.
   - name: "chart-operator"
-	namespace: "giantswarm"
-	catalog: "giantswarm-catalog"
-	kubeconfig:
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
       inCluster: "true"
     version: "0.9.0"
 
