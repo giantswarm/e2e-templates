@@ -18,6 +18,7 @@ apps:
         name: "{{ .App.KubeConfig.Secret.Name }}"
         namespace: "{{ .App.KubeConfig.Secret.Namespace }}"
     version: "{{ .App.Version }}"
+  # Added chart-operator app CR for e2e testing purpose.
   - name: "chart-operator"
 	namespace: "giantswarm"
 	catalog: "giantswarm-catalog"
