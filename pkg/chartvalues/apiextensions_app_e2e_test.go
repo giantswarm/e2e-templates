@@ -1,6 +1,7 @@
 package chartvalues
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/giantswarm/e2etemplates/internal/rendertest"
@@ -151,6 +152,7 @@ secrets:
 				return
 			}
 
+			fmt.Println(values)
 			line, difference := rendertest.Diff(values, tc.expectedValues)
 			if line > 0 {
 				t.Fatalf("line == %d, want 0, diff: %s", line, difference)
