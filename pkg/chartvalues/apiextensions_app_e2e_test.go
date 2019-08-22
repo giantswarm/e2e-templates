@@ -92,7 +92,7 @@ apps:
         name: "test-kubeconfig-secret"
         namespace: "default"
     version: "1.0.0"
-  # Added chart-operator app CR for e2e testing purpose.
+  # Added app CR for bootstrapping chart-operator
   - name: "chart-operator"
 	namespace: "giantswarm"
 	catalog: "giantswarm-catalog"
