@@ -75,44 +75,57 @@ func Test_NewAPIExtensionsAppE2E(t *testing.T) {
 			name:   "case 1: all values set",
 			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {}),
 			expectedValues: `
-app:
-  name: "test-app"
-  namespace: "default"
-  catalog: "test-app-catalog"
-  config:
-    configMap:
-      name: "test-app-values"
-      namespace: "default"
-    secret:
-      name: "test-app-secrets"
-      namespace: "default"
-  kubeConfig:
-    inCluster: false
-    secret:
-      name: "test-kubeconfig-secret"
-      namespace: "default"
-  version: "1.0.0"
+apps:
+  - name: "test-app"
+    namespace: "default"
+    catalog: "test-app-catalog"
+    config:
+      configMap:
+        name: "test-app-values"
+        namespace: "default"
+      secret:
+        name: "test-app-secrets"
+        namespace: "default"
+    kubeConfig:
+      inCluster: false
+      secret:
+        name: "test-kubeconfig-secret"
+        namespace: "default"
+    version: "1.0.0"
+  - name: "chart-operator"
+	namespace: "giantswarm"
+	catalog: "giantswarm-catalog"
+	kubeconfig:
+      inCluster: "true"
+    version: "0.9.0"
 
-appCatalog:
-  name: "test-app-catalog"
-  title: "test-app-catalog"
-  description: "giantswarm app catalog"
-  logoURL: "http://giantswarm.logo.catalog.png"
-  storage:
-    type: "helm"
-    url: "https://giantswarm.github.com/sample-catalog"
+appCatalogs:
+  - name: "test-app-catalog"
+    title: "test-app-catalog"
+    description: "giantswarm app catalog"
+    logoURL: "http://giantswarm.logo.catalog.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/sample-catalog"
+  - name: "giantswarm-catalog"
+    title: "giantswarm-catalog"
+    description: "giantswarm catalog"
+    logoUrl: "http://giantswarm.com/catalog-logo.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/giantswarm-catalog/"
 
 appOperator:
   version: "1.0.0"
 
-configMap:
-  values:
+configMaps:
+  test-app-values:
     test: "values"
 
 namespace: "default"
 
-secret:
-  values:
+secrets:
+  test-app-secrets:
     test: "secret"`,
 			errorMatcher: nil,
 		},
