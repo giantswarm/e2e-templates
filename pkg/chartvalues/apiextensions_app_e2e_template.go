@@ -28,7 +28,7 @@ apps:
 {{- end }}
 {{- end }}
     version: "{{ .App.Version }}"
-  # Added chart-operator app CR for e2e testing purpose.
+  # Added app CR for bootstrapping chart-operator
   - name: "chart-operator"
     namespace: "giantswarm"
     catalog: "giantswarm-catalog"
