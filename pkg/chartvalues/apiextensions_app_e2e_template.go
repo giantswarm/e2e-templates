@@ -5,14 +5,14 @@ apps:
   - name: "{{ .App.Name }}"
     namespace: "{{ .App.Namespace }}"
     catalog: "{{ .App.Catalog }}"
-{{- if .App.Config }}
+{{- if or .App.Config.ConfigMap.Name .App.Config.Secret.Name }}
     config:
-{{- if .App.Config.ConfigMap }}
+{{- if .App.Config.ConfigMap.Name }}
       configMap:
         name: "{{ .App.Config.ConfigMap.Name }}"
         namespace: "{{ .App.Config.ConfigMap.Namespace }}"
 {{- end }}
-{{- if .App.Config.Secret }}
+{{- if .App.Config.Secret.Name }}
       secret:
         name: "{{ .App.Config.Secret.Name }}"
         namespace: "{{ .App.Config.Secret.Namespace }}"
@@ -55,7 +55,7 @@ appCatalogs:
 appOperator:
   version: "{{ .AppOperator.Version }}"
 
-{{ if .App.Config.ConfigMap -}}
+{{ if .App.Config.ConfigMap.Name -}}
 configMaps:
   {{ .App.Config.ConfigMap.Name }}:
     {{ .ConfigMap.ValuesYAML }}
@@ -63,7 +63,7 @@ configMaps:
 
 namespace: "{{ .Namespace }}"
 
-{{ if .App.Config.Secret -}}
+{{ if .App.Config.Secret.Name -}}
 secrets:
   {{ .App.Config.Secret.Name }}:
     {{ .Secret.ValuesYAML }}

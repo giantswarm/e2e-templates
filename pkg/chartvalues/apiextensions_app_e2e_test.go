@@ -7,75 +7,8 @@ import (
 	"github.com/giantswarm/e2etemplates/internal/rendertest"
 )
 
-func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2EConfig)) APIExtensionsAppE2EConfig {
-	c := APIExtensionsAppE2EConfig{
-		App: APIExtensionsAppE2EConfigApp{
-			Name:      "test-app",
-			Namespace: "default",
-			Catalog:   "test-app-catalog",
-			Config: APIExtensionsAppE2EConfigAppConfig{
-				ConfigMap: APIExtensionsAppE2EConfigAppConfigConfigMap{
-					Name:      "test-app-values",
-					Namespace: "default",
-				},
-				Secret: APIExtensionsAppE2EConfigAppConfigSecret{
-					Name:      "test-app-secrets",
-					Namespace: "default",
-				},
-			},
-			KubeConfig: APIExtensionsAppE2EConfigAppKubeConfig{
-				InCluster: false,
-				Secret: APIExtensionsAppE2EConfigAppConfigKubeConfigSecret{
-					Name:      "test-kubeconfig-secret",
-					Namespace: "default",
-				},
-			},
-			Version: "1.0.0",
-		},
-		AppCatalog: APIExtensionsAppE2EConfigAppCatalog{
-			Name:        "test-app-catalog",
-			Title:       "test-app-catalog",
-			Description: "giantswarm app catalog",
-			LogoURL:     "http://giantswarm.logo.catalog.png",
-			Storage: APIExtensionsAppE2EConfigAppCatalogStorage{
-				Type: "helm",
-				URL:  "https://giantswarm.github.com/sample-catalog",
-			},
-		},
-		AppOperator: APIExtensionsAppE2EConfigAppOperator{
-			Version: "1.0.0",
-		},
-		ConfigMap: APIExtensionsAppE2EConfigConfigMap{
-			ValuesYAML: `test: "values"`,
-		},
-		Namespace: "default",
-		Secret: APIExtensionsAppE2EConfigSecret{
-			ValuesYAML: `test: "secret"`,
-		},
-	}
-
-	modifyFunc(&c)
-
-	return c
-}
-
-func Test_NewAPIExtensionsAppE2E(t *testing.T) {
-	testCases := []struct {
-		name           string
-		config         APIExtensionsAppE2EConfig
-		expectedValues string
-		errorMatcher   func(err error) bool
-	}{
-		{
-			name:           "case 0: invalid config",
-			config:         APIExtensionsAppE2EConfig{},
-			expectedValues: ``,
-			errorMatcher:   IsInvalidConfig,
-		},
-		{
-			name:   "case 1: all values set",
-			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {}),
-			expectedValues: `
+const (
+	expectedValues = `
 apps:
   - name: "test-app"
     namespace: "default"
@@ -128,8 +61,133 @@ namespace: "default"
 
 secrets:
   test-app-secrets:
-    test: "secret"`,
-			errorMatcher: nil,
+    test: "secret"`
+
+	expectedValuesWithoutConfig = `
+apps:
+  - name: "test-app"
+    namespace: "default"
+    catalog: "test-app-catalog"
+    kubeConfig:
+      inCluster: false
+      secret:
+        name: "test-kubeconfig-secret"
+        namespace: "default"
+    version: "1.0.0"
+  # Added app CR for bootstrapping chart-operator
+  - name: "chart-operator"
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
+      inCluster: "true"
+    version: "0.9.0"
+
+appCatalogs:
+  - name: "test-app-catalog"
+    title: "test-app-catalog"
+    description: "giantswarm app catalog"
+    logoURL: "http://giantswarm.logo.catalog.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/sample-catalog"
+  - name: "giantswarm-catalog"
+    title: "giantswarm-catalog"
+    description: "giantswarm catalog"
+    logoUrl: "http://giantswarm.com/catalog-logo.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/giantswarm-catalog/"
+
+appOperator:
+  version: "1.0.0"
+
+
+
+namespace: "default"
+
+`
+)
+
+func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2EConfig)) APIExtensionsAppE2EConfig {
+	c := APIExtensionsAppE2EConfig{
+		App: APIExtensionsAppE2EConfigApp{
+			Name:      "test-app",
+			Namespace: "default",
+			Catalog:   "test-app-catalog",
+			Config: APIExtensionsAppE2EConfigAppConfig{
+				ConfigMap: APIExtensionsAppE2EConfigAppConfigConfigMap{
+					Name:      "test-app-values",
+					Namespace: "default",
+				},
+				Secret: APIExtensionsAppE2EConfigAppConfigSecret{
+					Name:      "test-app-secrets",
+					Namespace: "default",
+				},
+			},
+			KubeConfig: APIExtensionsAppE2EConfigAppKubeConfig{
+				InCluster: false,
+				Secret: APIExtensionsAppE2EConfigAppConfigKubeConfigSecret{
+					Name:      "test-kubeconfig-secret",
+					Namespace: "default",
+				},
+			},
+			Version: "1.0.0",
+		},
+		AppCatalog: APIExtensionsAppE2EConfigAppCatalog{
+			Name:        "test-app-catalog",
+			Title:       "test-app-catalog",
+			Description: "giantswarm app catalog",
+			LogoURL:     "http://giantswarm.logo.catalog.png",
+			Storage: APIExtensionsAppE2EConfigAppCatalogStorage{
+				Type: "helm",
+				URL:  "https://giantswarm.github.com/sample-catalog",
+			},
+		},
+		AppOperator: APIExtensionsAppE2EConfigAppOperator{
+			Version: "1.0.0",
+		},
+		ConfigMap: APIExtensionsAppE2EConfigConfigMap{
+			ValuesYAML: `test: "values"`,
+		},
+		Namespace: "default",
+		Secret: APIExtensionsAppE2EConfigSecret{
+			ValuesYAML: `test: "secret"`,
+		},
+	}
+
+	modifyFunc(&c)
+
+	return c
+}
+
+func removeConfigMapAndSecret(v *APIExtensionsAppE2EConfig) {
+	v.App.Config = APIExtensionsAppE2EConfigAppConfig{}
+}
+
+func Test_NewAPIExtensionsAppE2E(t *testing.T) {
+	testCases := []struct {
+		name           string
+		config         APIExtensionsAppE2EConfig
+		expectedValues string
+		errorMatcher   func(err error) bool
+	}{
+		{
+			name:           "case 0: invalid config",
+			config:         APIExtensionsAppE2EConfig{},
+			expectedValues: ``,
+			errorMatcher:   IsInvalidConfig,
+		},
+		{
+			name:           "case 1: all values set",
+			config:         newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {}),
+			expectedValues: expectedValues,
+			errorMatcher:   nil,
+		},
+		{
+			name:           "case 2: no configmap and secret",
+			config:         newAPIExtensionsAppE2EConfigFromFilled(removeConfigMapAndSecret),
+			expectedValues: expectedValuesWithoutConfig,
+			errorMatcher:   nil,
 		},
 	}
 
