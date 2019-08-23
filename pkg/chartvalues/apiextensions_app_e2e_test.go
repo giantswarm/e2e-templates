@@ -1,6 +1,7 @@
 package chartvalues
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/giantswarm/e2etemplates/internal/rendertest"
@@ -94,9 +95,9 @@ apps:
     version: "1.0.0"
   # Added app CR for bootstrapping chart-operator
   - name: "chart-operator"
-	namespace: "giantswarm"
-	catalog: "giantswarm-catalog"
-	kubeconfig:
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
       inCluster: "true"
     version: "0.9.0"
 
@@ -151,6 +152,7 @@ secrets:
 				return
 			}
 
+			fmt.Println(values)
 			line, difference := rendertest.Diff(values, tc.expectedValues)
 			if line > 0 {
 				t.Fatalf("line == %d, want 0, diff: %s", line, difference)
