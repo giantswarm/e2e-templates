@@ -30,8 +30,8 @@ apps:
   - name: "chart-operator"
     namespace: "giantswarm"
     catalog: "giantswarm-catalog"
-    kubeconfig:
-      inCluster: "true"
+    kubeConfig:
+      inCluster: true
     version: "0.9.0"
 
 appCatalogs:
@@ -78,8 +78,8 @@ apps:
   - name: "chart-operator"
     namespace: "giantswarm"
     catalog: "giantswarm-catalog"
-    kubeconfig:
-      inCluster: "true"
+    kubeConfig:
+      inCluster: true
     version: "0.9.0"
 
 appCatalogs:
