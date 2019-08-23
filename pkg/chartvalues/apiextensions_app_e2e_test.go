@@ -7,6 +7,107 @@ import (
 	"github.com/giantswarm/e2etemplates/internal/rendertest"
 )
 
+const (
+	expectedValues = `
+apps:
+  - name: "test-app"
+    namespace: "default"
+    catalog: "test-app-catalog"
+    config:
+      configMap:
+        name: "test-app-values"
+        namespace: "default"
+      secret:
+        name: "test-app-secrets"
+        namespace: "default"
+    kubeConfig:
+      inCluster: false
+      secret:
+        name: "test-kubeconfig-secret"
+        namespace: "default"
+    version: "1.0.0"
+  # Added app CR for bootstrapping chart-operator
+  - name: "chart-operator"
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
+      inCluster: "true"
+    version: "0.9.0"
+
+appCatalogs:
+  - name: "test-app-catalog"
+    title: "test-app-catalog"
+    description: "giantswarm app catalog"
+    logoURL: "http://giantswarm.logo.catalog.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/sample-catalog"
+  - name: "giantswarm-catalog"
+    title: "giantswarm-catalog"
+    description: "giantswarm catalog"
+    logoUrl: "http://giantswarm.com/catalog-logo.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/giantswarm-catalog/"
+
+appOperator:
+  version: "1.0.0"
+
+configMaps:
+  test-app-values:
+    test: "values"
+
+namespace: "default"
+
+secrets:
+  test-app-secrets:
+    test: "secret"`
+
+	expectedValuesWithoutConfig = `
+apps:
+  - name: "test-app"
+    namespace: "default"
+    catalog: "test-app-catalog"
+    kubeConfig:
+      inCluster: false
+      secret:
+        name: "test-kubeconfig-secret"
+        namespace: "default"
+    version: "1.0.0"
+  # Added app CR for bootstrapping chart-operator
+  - name: "chart-operator"
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
+      inCluster: "true"
+    version: "0.9.0"
+
+appCatalogs:
+  - name: "test-app-catalog"
+    title: "test-app-catalog"
+    description: "giantswarm app catalog"
+    logoURL: "http://giantswarm.logo.catalog.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/sample-catalog"
+  - name: "giantswarm-catalog"
+    title: "giantswarm-catalog"
+    description: "giantswarm catalog"
+    logoUrl: "http://giantswarm.com/catalog-logo.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/giantswarm-catalog/"
+
+appOperator:
+  version: "1.0.0"
+
+
+
+namespace: "default"
+
+`
+)
+
 func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2EConfig)) APIExtensionsAppE2EConfig {
 	c := APIExtensionsAppE2EConfig{
 		App: APIExtensionsAppE2EConfigApp{
@@ -77,111 +178,16 @@ func Test_NewAPIExtensionsAppE2E(t *testing.T) {
 			errorMatcher:   IsInvalidConfig,
 		},
 		{
-			name:   "case 1: all values set",
-			config: newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {}),
-			expectedValues: `
-apps:
-  - name: "test-app"
-    namespace: "default"
-    catalog: "test-app-catalog"
-    config:
-      configMap:
-        name: "test-app-values"
-        namespace: "default"
-      secret:
-        name: "test-app-secrets"
-        namespace: "default"
-    kubeConfig:
-      inCluster: false
-      secret:
-        name: "test-kubeconfig-secret"
-        namespace: "default"
-    version: "1.0.0"
-  # Added app CR for bootstrapping chart-operator
-  - name: "chart-operator"
-    namespace: "giantswarm"
-    catalog: "giantswarm-catalog"
-    kubeconfig:
-      inCluster: "true"
-    version: "0.9.0"
-
-appCatalogs:
-  - name: "test-app-catalog"
-    title: "test-app-catalog"
-    description: "giantswarm app catalog"
-    logoURL: "http://giantswarm.logo.catalog.png"
-    storage:
-      type: "helm"
-      url: "https://giantswarm.github.com/sample-catalog"
-  - name: "giantswarm-catalog"
-    title: "giantswarm-catalog"
-    description: "giantswarm catalog"
-    logoUrl: "http://giantswarm.com/catalog-logo.png"
-    storage:
-      type: "helm"
-      url: "https://giantswarm.github.com/giantswarm-catalog/"
-
-appOperator:
-  version: "1.0.0"
-
-configMaps:
-  test-app-values:
-    test: "values"
-
-namespace: "default"
-
-secrets:
-  test-app-secrets:
-    test: "secret"`,
-			errorMatcher: nil,
+			name:           "case 1: all values set",
+			config:         newAPIExtensionsAppE2EConfigFromFilled(func(v *APIExtensionsAppE2EConfig) {}),
+			expectedValues: expectedValues,
+			errorMatcher:   nil,
 		},
 		{
-			name:   "case 2: no configmap and secret",
-			config: newAPIExtensionsAppE2EConfigFromFilled(removeConfigMapAndSecret),
-			expectedValues: `
-apps:
-  - name: "test-app"
-    namespace: "default"
-    catalog: "test-app-catalog"
-    kubeConfig:
-      inCluster: false
-      secret:
-        name: "test-kubeconfig-secret"
-        namespace: "default"
-    version: "1.0.0"
-  # Added app CR for bootstrapping chart-operator
-  - name: "chart-operator"
-    namespace: "giantswarm"
-    catalog: "giantswarm-catalog"
-    kubeconfig:
-      inCluster: "true"
-    version: "0.9.0"
-
-appCatalogs:
-  - name: "test-app-catalog"
-    title: "test-app-catalog"
-    description: "giantswarm app catalog"
-    logoURL: "http://giantswarm.logo.catalog.png"
-    storage:
-      type: "helm"
-      url: "https://giantswarm.github.com/sample-catalog"
-  - name: "giantswarm-catalog"
-    title: "giantswarm-catalog"
-    description: "giantswarm catalog"
-    logoUrl: "http://giantswarm.com/catalog-logo.png"
-    storage:
-      type: "helm"
-      url: "https://giantswarm.github.com/giantswarm-catalog/"
-
-appOperator:
-  version: "1.0.0"
-
-
-
-namespace: "default"
-
-`,
-			errorMatcher: nil,
+			name:           "case 2: no configmap and secret",
+			config:         newAPIExtensionsAppE2EConfigFromFilled(removeConfigMapAndSecret),
+			expectedValues: expectedValuesWithoutConfig,
+			errorMatcher:   nil,
 		},
 	}
 
