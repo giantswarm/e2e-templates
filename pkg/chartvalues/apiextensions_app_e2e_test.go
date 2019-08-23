@@ -59,6 +59,10 @@ func newAPIExtensionsAppE2EConfigFromFilled(modifyFunc func(*APIExtensionsAppE2E
 	return c
 }
 
+func removeConfigMapAndSecret(v *APIExtensionsAppE2EConfig) {
+	v.App.Config = APIExtensionsAppE2EConfigAppConfig{}
+}
+
 func Test_NewAPIExtensionsAppE2E(t *testing.T) {
 	testCases := []struct {
 		name           string
@@ -129,6 +133,54 @@ namespace: "default"
 secrets:
   test-app-secrets:
     test: "secret"`,
+			errorMatcher: nil,
+		},
+		{
+			name:   "case 2: no configmap and secret",
+			config: newAPIExtensionsAppE2EConfigFromFilled(removeConfigMapAndSecret),
+			expectedValues: `
+apps:
+  - name: "test-app"
+    namespace: "default"
+    catalog: "test-app-catalog"
+    kubeConfig:
+      inCluster: false
+      secret:
+        name: "test-kubeconfig-secret"
+        namespace: "default"
+    version: "1.0.0"
+  # Added chart-operator app CR for e2e testing purpose.
+  - name: "chart-operator"
+    namespace: "giantswarm"
+    catalog: "giantswarm-catalog"
+    kubeconfig:
+      inCluster: "true"
+    version: "0.9.0"
+
+appCatalogs:
+  - name: "test-app-catalog"
+    title: "test-app-catalog"
+    description: "giantswarm app catalog"
+    logoURL: "http://giantswarm.logo.catalog.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/sample-catalog"
+  - name: "giantswarm-catalog"
+    title: "giantswarm-catalog"
+    description: "giantswarm catalog"
+    logoUrl: "http://giantswarm.com/catalog-logo.png"
+    storage:
+      type: "helm"
+      url: "https://giantswarm.github.com/giantswarm-catalog/"
+
+appOperator:
+  version: "1.0.0"
+
+
+
+namespace: "default"
+
+`,
 			errorMatcher: nil,
 		},
 	}
