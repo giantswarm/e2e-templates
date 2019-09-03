@@ -26,13 +26,6 @@ apps:
         name: "test-kubeconfig-secret"
         namespace: "default"
     version: "1.0.0"
-  # Added app CR for bootstrapping chart-operator
-  - name: "chart-operator"
-    namespace: "giantswarm"
-    catalog: "giantswarm-catalog"
-    kubeConfig:
-      inCluster: true
-    version: "0.9.0"
 
 appCatalogs:
   - name: "test-app-catalog"
@@ -42,13 +35,6 @@ appCatalogs:
     storage:
       type: "helm"
       url: "https://giantswarm.github.com/sample-catalog"
-  - name: "giantswarm-catalog"
-    title: "giantswarm-catalog"
-    description: "giantswarm catalog"
-    logoUrl: "http://giantswarm.com/catalog-logo.png"
-    storage:
-      type: "helm"
-      url: "https://giantswarm.github.com/giantswarm-catalog/"
 
 appOperator:
   version: "1.0.0"
@@ -74,13 +60,6 @@ apps:
         name: "test-kubeconfig-secret"
         namespace: "default"
     version: "1.0.0"
-  # Added app CR for bootstrapping chart-operator
-  - name: "chart-operator"
-    namespace: "giantswarm"
-    catalog: "giantswarm-catalog"
-    kubeConfig:
-      inCluster: true
-    version: "0.9.0"
 
 appCatalogs:
   - name: "test-app-catalog"
@@ -90,13 +69,6 @@ appCatalogs:
     storage:
       type: "helm"
       url: "https://giantswarm.github.com/sample-catalog"
-  - name: "giantswarm-catalog"
-    title: "giantswarm-catalog"
-    description: "giantswarm catalog"
-    logoUrl: "http://giantswarm.com/catalog-logo.png"
-    storage:
-      type: "helm"
-      url: "https://giantswarm.github.com/giantswarm-catalog/"
 
 appOperator:
   version: "1.0.0"
