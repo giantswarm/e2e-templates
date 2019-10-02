@@ -133,6 +133,10 @@ func Test_NewAWSOperator(t *testing.T) {
     Security:
       RestrictAccess:
         Enabled: false
+        GSAPI: false
+        GuestAPI:
+          Private: false
+          Public: false
 `,
 			errorMatcher: nil,
 		},
@@ -214,6 +218,10 @@ func Test_NewAWSOperator(t *testing.T) {
     Security:
       RestrictAccess:
         Enabled: false
+        GSAPI: false
+        GuestAPI:
+          Private: false
+          Public: false
 `,
 			errorMatcher: nil,
 		},

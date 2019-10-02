@@ -73,6 +73,6 @@ const awsOperatorTemplate = `Installation:
         Enabled: false
         GSAPI: false
         GuestAPI:
-          Public: false
           Private: false
+          Public: false
 `
