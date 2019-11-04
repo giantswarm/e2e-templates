@@ -42,7 +42,7 @@ func Test_NewAWSHostPeerStack(t *testing.T) {
 			config: newAWSHostPeerStackConfigFromFilled(func(v *AWSHostPeerStackConfig) {}),
 			expectedValues: `
 AWSTemplateFormatVersion: 2010-09-09
-Description: Host Peer Stack with VPC peering and route tables for testing purposes
+Description: Control Plane Peer Stack with VPC peering and route tables for testing purposes
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -51,6 +51,8 @@ Resources:
       Tags:
       - Key: Name
         Value: test-stack-name
+      - Key: giantswarm.io/installation
+        Value: cp-test-stack-name
   PeerRouteTable0:
     Type: AWS::EC2::RouteTable
     Properties:
