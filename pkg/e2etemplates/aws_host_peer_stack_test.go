@@ -52,7 +52,7 @@ Resources:
       - Key: Name
         Value: test-stack-name
       - Key: giantswarm.io/installation
-        Value: cp-test-stack-name
+        Value: cp-peer-test-stack-name
   PeerRouteTable0:
     Type: AWS::EC2::RouteTable
     Properties:

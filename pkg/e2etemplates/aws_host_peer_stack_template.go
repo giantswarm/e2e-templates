@@ -12,7 +12,7 @@ Resources:
       - Key: Name
         Value: {{ .Stack.Name }}
       - Key: giantswarm.io/installation
-        Value: cp-{{ .Stack.Name }}
+        Value: cp-peer-{{ .Stack.Name }}
   PeerRouteTable0:
     Type: AWS::EC2::RouteTable
     Properties:
