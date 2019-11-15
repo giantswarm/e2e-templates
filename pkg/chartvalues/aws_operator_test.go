@@ -8,6 +8,7 @@ import (
 
 func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOperatorConfig {
 	c := AWSOperatorConfig{
+		InstallationName: "ci-aws-operator",
 		Provider: AWSOperatorConfigProvider{
 			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter:       "vault",
@@ -95,7 +96,7 @@ func Test_NewAWSOperator(t *testing.T) {
         UserList: 'test-user-list'
       Update:
         Enabled: true
-    Name: ci-aws-operator
+    Name: 'ci-aws-operator'
     Provider:
       AWS:
         AvailabilityZones:
@@ -180,7 +181,7 @@ func Test_NewAWSOperator(t *testing.T) {
         UserList: 'test-user-list'
       Update:
         Enabled: true
-    Name: ci-aws-operator
+    Name: 'ci-aws-operator'
     Provider:
       AWS:
         AvailabilityZones:
@@ -320,6 +321,13 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			name: "case 8: invalid .SSH.UserList",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.SSH.UserList = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 9: invalid .InstallationName",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
+				v.InstallationName = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
