@@ -14,7 +14,6 @@ func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOper
 				Encrypter:       "vault",
 				Region:          "eu-central-1",
 				RouteTableNames: "foo,bar",
-				VPCPeerID:       "test-vpc-id",
 			},
 		},
 		RegistryPullSecret: "test-registry-pull-secret",
@@ -272,13 +271,6 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			name: "case 1: invalid .Provider.AWS.RouteTableNames",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.Provider.AWS.RouteTableNames = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 2: invalid .Provider.AWS.VPCPeerID",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Provider.AWS.VPCPeerID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
