@@ -8,12 +8,12 @@ import (
 
 func newAWSOperatorConfigFromFilled(modifyFunc func(*AWSOperatorConfig)) AWSOperatorConfig {
 	c := AWSOperatorConfig{
+		InstallationName: "ci-aws-operator",
 		Provider: AWSOperatorConfigProvider{
 			AWS: AWSOperatorConfigProviderAWS{
 				Encrypter:       "vault",
 				Region:          "eu-central-1",
 				RouteTableNames: "foo,bar",
-				VPCPeerID:       "test-vpc-id",
 			},
 		},
 		RegistryPullSecret: "test-registry-pull-secret",
@@ -95,7 +95,7 @@ func Test_NewAWSOperator(t *testing.T) {
         UserList: 'test-user-list'
       Update:
         Enabled: true
-    Name: ci-aws-operator
+    Name: 'ci-aws-operator'
     Provider:
       AWS:
         AvailabilityZones:
@@ -111,7 +111,6 @@ func Test_NewAWSOperator(t *testing.T) {
         Encrypter: 'vault'
         TrustedAdvisor:
           Enabled: false
-        VPCPeerID: 'test-vpc-id'
     Registry:
       Domain: quay.io
     Secret:
@@ -180,7 +179,7 @@ func Test_NewAWSOperator(t *testing.T) {
         UserList: 'test-user-list'
       Update:
         Enabled: true
-    Name: ci-aws-operator
+    Name: 'ci-aws-operator'
     Provider:
       AWS:
         AvailabilityZones:
@@ -196,7 +195,6 @@ func Test_NewAWSOperator(t *testing.T) {
         Encrypter: 'kms'
         TrustedAdvisor:
           Enabled: false
-        VPCPeerID: 'test-vpc-id'
     Registry:
       Domain: quay.io
     Secret:
@@ -275,13 +273,6 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 2: invalid .Provider.AWS.VPCPeerID",
-			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
-				v.Provider.AWS.VPCPeerID = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
 			name: "case 3: invalid .RegistryPullSecret",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.RegistryPullSecret = ""
@@ -320,6 +311,13 @@ func Test_NewAWSOperator_invalidConfigError(t *testing.T) {
 			name: "case 8: invalid .SSH.UserList",
 			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
 				v.SSH.UserList = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 9: invalid .InstallationName",
+			config: newAWSOperatorConfigFromFilled(func(v *AWSOperatorConfig) {
+				v.InstallationName = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},

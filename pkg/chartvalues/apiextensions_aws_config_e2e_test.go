@@ -21,7 +21,6 @@ func newAPIExtensionsAWSConfigE2EConfigFromFilled(modifyFunc func(*APIExtensions
 			Region:            "test-region",
 			RouteTable0:       "test-route-table-0",
 			RouteTable1:       "test-route-table-1",
-			VPCPeerID:         "test-vpc-peer-id",
 		},
 	}
 
@@ -58,7 +57,6 @@ aws:
   ingressHostedZone: test-ingress-hosted-zone
   routeTable0: test-route-table-0
   routeTable1: test-route-table-1
-  vpcPeerId: test-vpc-peer-id
 `,
 			errorMatcher: nil,
 		},
@@ -82,7 +80,6 @@ aws:
   ingressHostedZone: test-ingress-hosted-zone
   routeTable0: test-route-table-0
   routeTable1: test-route-table-1
-  vpcPeerId: test-vpc-peer-id
 `,
 			errorMatcher: nil,
 		},
@@ -174,13 +171,6 @@ func Test_NewAPIExtensionsAWSConfigE2E_invalidConfigError(t *testing.T) {
 			name: "case 7: invalid .AWS.RouteTable1",
 			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
 				v.AWS.RouteTable1 = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 8: invalid .AWS.VPCPeerID",
-			config: newAPIExtensionsAWSConfigE2EConfigFromFilled(func(v *APIExtensionsAWSConfigE2EConfig) {
-				v.AWS.VPCPeerID = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
