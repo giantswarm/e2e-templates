@@ -111,7 +111,6 @@ func Test_NewAWSOperator(t *testing.T) {
         Encrypter: 'vault'
         TrustedAdvisor:
           Enabled: false
-        VPCPeerID: 'test-vpc-id'
     Registry:
       Domain: quay.io
     Secret:
@@ -196,7 +195,6 @@ func Test_NewAWSOperator(t *testing.T) {
         Encrypter: 'kms'
         TrustedAdvisor:
           Enabled: false
-        VPCPeerID: 'test-vpc-id'
     Registry:
       Domain: quay.io
     Secret:
