@@ -9,14 +9,15 @@ import (
 func newAPIExtensionsAzureConfigE2EConfigFromFilled(modifyFunc func(*APIExtensionsAzureConfigE2EConfig)) APIExtensionsAzureConfigE2EConfig {
 	c := APIExtensionsAzureConfigE2EConfig{
 		Azure: APIExtensionsAzureConfigE2EConfigAzure{
-			CalicoSubnetCIDR: "test-calico-subnet-cidr",
-			CIDR:             "test-cidr",
-			Location:         "test-location",
-			MasterSubnetCIDR: "test-master-subnet-cidr",
-			VMSizeMaster:     "test-vm-size-master",
-			VMSizeWorker:     "test-vm-size-worker",
-			VPNSubnetCIDR:    "test-vpn-subnet-cidr",
-			WorkerSubnetCIDR: "test-worker-subnet-cidr",
+			AvailabilityZones: []int{},
+			CalicoSubnetCIDR:  "test-calico-subnet-cidr",
+			CIDR:              "test-cidr",
+			Location:          "test-location",
+			MasterSubnetCIDR:  "test-master-subnet-cidr",
+			VMSizeMaster:      "test-vm-size-master",
+			VMSizeWorker:      "test-vm-size-worker",
+			VPNSubnetCIDR:     "test-vpn-subnet-cidr",
+			WorkerSubnetCIDR:  "test-worker-subnet-cidr",
 		},
 		ClusterName:               "test-cluster-name",
 		CommonDomain:              "test-common-domain",
