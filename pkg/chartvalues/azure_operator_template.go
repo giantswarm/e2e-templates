@@ -38,6 +38,9 @@ Installation:
         MSI:
           Enabled: true
         Location: {{ .Provider.Azure.Location }}
+	  Tenant:
+	    Ignition:
+		  AdditionPath:
     Registry:
       Domain: quay.io
     Secret:
