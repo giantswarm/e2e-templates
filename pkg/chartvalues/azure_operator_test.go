@@ -10,7 +10,8 @@ func newAzureOperatorConfigFromFilled(modifyFunc func(*AzureOperatorConfig)) Azu
 	c := AzureOperatorConfig{
 		Provider: AzureOperatorConfigProvider{
 			Azure: AzureOperatorConfigProviderAzure{
-				Location: "test-location",
+				HostClusterCidr: "10.0.0.0/16",
+				Location:        "test-location",
 			},
 		},
 		Secret: AzureOperatorConfigSecret{
