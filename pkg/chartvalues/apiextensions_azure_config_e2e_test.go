@@ -22,6 +22,8 @@ func newAPIExtensionsAzureConfigE2EConfigFromFilled(modifyFunc func(*APIExtensio
 		ClusterName:               "test-cluster-name",
 		CommonDomain:              "test-common-domain",
 		CommonDomainResourceGroup: "test-common-domain-resource-group",
+		SSHPublicKey:              "some-ssh-public-key",
+		SSHUser:                   "test-user",
 		VersionBundleVersion:      "test-version-bundle-version",
 	}
 
@@ -59,6 +61,8 @@ azure:
 clusterName: test-cluster-name
 commonDomain: test-common-domain
 commonDomainResourceGroup: test-common-domain-resource-group
+sshPublicKey: some-ssh-public-key
+sshUser: test-user
 versionBundleVersion: test-version-bundle-version
 `,
 			errorMatcher: nil,
@@ -82,6 +86,8 @@ azure:
 clusterName: test-cluster-name
 commonDomain: test-common-domain
 commonDomainResourceGroup: test-common-domain-resource-group
+sshPublicKey: some-ssh-public-key
+sshUser: test-user
 versionBundleVersion: test-version-bundle-version
 `,
 			errorMatcher: nil,
@@ -185,7 +191,21 @@ func Test_NewAPIExtensionsAzureConfigE2E_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 9: invalid .VersionBundleVersion",
+			name: "case 9: invalid .SSHPublicKey",
+			config: newAPIExtensionsAzureConfigE2EConfigFromFilled(func(v *APIExtensionsAzureConfigE2EConfig) {
+				v.SSHPublicKey = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 10: invalid .SSHUser",
+			config: newAPIExtensionsAzureConfigE2EConfigFromFilled(func(v *APIExtensionsAzureConfigE2EConfig) {
+				v.SSHUser = ""
+			}),
+			errorMatcher: IsInvalidConfig,
+		},
+		{
+			name: "case 11: invalid .VersionBundleVersion",
 			config: newAPIExtensionsAzureConfigE2EConfigFromFilled(func(v *APIExtensionsAzureConfigE2EConfig) {
 				v.VersionBundleVersion = ""
 			}),
