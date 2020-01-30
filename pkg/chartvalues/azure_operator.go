@@ -12,8 +12,7 @@ type AzureOperatorConfig struct {
 }
 
 type AzureOperatorConfigProvider struct {
-	Azure  AzureOperatorConfigProviderAzure
-	Tenant AzureOperatorConfigSecretAzureOperatorSecretYamlServiceTenant
+	Azure AzureOperatorConfigProviderAzure
 }
 
 type AzureOperatorConfigProviderAzure struct {
@@ -35,7 +34,8 @@ type AzureOperatorConfigSecretAzureOperatorSecretYaml struct {
 }
 
 type AzureOperatorConfigSecretAzureOperatorSecretYamlService struct {
-	Azure AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzure
+	Azure  AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzure
+	Tenant AzureOperatorConfigSecretAzureOperatorSecretYamlServiceTenant
 }
 
 type AzureOperatorConfigSecretAzureOperatorSecretYamlServiceAzure struct {
