@@ -33,8 +33,8 @@ func newAzureOperatorConfigFromFilled(modifyFunc func(*AzureOperatorConfig)) Azu
 							Ignition: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceTenantIgnition{
 								Debug: AzureOperatorConfigSecretAzureOperatorSecretYamlServiceTenantIgnitionDebug{
 									Enabled:    true,
-									LogsPrefix: prefix,
-									LogsToken:  token,
+									LogsPrefix: "prefix",
+									LogsToken:  "token",
 								},
 							},
 						},
@@ -122,12 +122,12 @@ Installation:
               template:
                 uri:
                   version: test-version
-			tenant:
-			  ignition:
-			    debug:
-				  enabled: true
-				  logsprefix: prefix
-				  logstoken: token
+            tenant:
+              ignition:
+                debug:
+                  enabled: true
+                  logsprefix: prefix
+                  logstoken: token
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-docker-config-json\"}}}"
