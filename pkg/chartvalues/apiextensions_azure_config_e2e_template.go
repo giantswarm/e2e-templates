@@ -19,7 +19,10 @@ azure:
 clusterName: {{ .ClusterName }}
 commonDomain: {{ .CommonDomain }}
 commonDomainResourceGroup: {{ .CommonDomainResourceGroup }}
-sshPublicKey: {{ .SSHPublicKey }}
-sshUser: {{ .SSHUser }}
+sshUserList:
+{{ range $index, $element := .SSHUserList -}}
+- name: {{ $element.Name }}
+  publicKey: {{ $element.PublicKey }}
+{{ end -}}
 versionBundleVersion: {{ .VersionBundleVersion }}
 `

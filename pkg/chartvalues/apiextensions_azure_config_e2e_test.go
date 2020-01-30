@@ -7,6 +7,7 @@ import (
 )
 
 func newAPIExtensionsAzureConfigE2EConfigFromFilled(modifyFunc func(*APIExtensionsAzureConfigE2EConfig)) APIExtensionsAzureConfigE2EConfig {
+
 	c := APIExtensionsAzureConfigE2EConfig{
 		Azure: APIExtensionsAzureConfigE2EConfigAzure{
 			AvailabilityZones: []int{},
@@ -22,9 +23,13 @@ func newAPIExtensionsAzureConfigE2EConfigFromFilled(modifyFunc func(*APIExtensio
 		ClusterName:               "test-cluster-name",
 		CommonDomain:              "test-common-domain",
 		CommonDomainResourceGroup: "test-common-domain-resource-group",
-		SSHPublicKey:              "some-ssh-public-key",
-		SSHUser:                   "test-user",
-		VersionBundleVersion:      "test-version-bundle-version",
+		SSHUserList: []SSHUser{
+			{
+				Name:      "test-user",
+				PublicKey: "some-ssh-public-key",
+			},
+		},
+		VersionBundleVersion: "test-version-bundle-version",
 	}
 
 	modifyFunc(&c)
@@ -61,8 +66,9 @@ azure:
 clusterName: test-cluster-name
 commonDomain: test-common-domain
 commonDomainResourceGroup: test-common-domain-resource-group
-sshPublicKey: some-ssh-public-key
-sshUser: test-user
+sshUserList:
+- name: test-user
+  publicKey: some-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 `,
 			errorMatcher: nil,
@@ -86,8 +92,9 @@ azure:
 clusterName: test-cluster-name
 commonDomain: test-common-domain
 commonDomainResourceGroup: test-common-domain-resource-group
-sshPublicKey: some-ssh-public-key
-sshUser: test-user
+sshUserList:
+- name: test-user
+  publicKey: some-ssh-public-key
 versionBundleVersion: test-version-bundle-version
 `,
 			errorMatcher: nil,
@@ -191,16 +198,9 @@ func Test_NewAPIExtensionsAzureConfigE2E_invalidConfigError(t *testing.T) {
 			errorMatcher: IsInvalidConfig,
 		},
 		{
-			name: "case 9: invalid .SSHPublicKey",
+			name: "case 10: invalid .SSHUserList",
 			config: newAPIExtensionsAzureConfigE2EConfigFromFilled(func(v *APIExtensionsAzureConfigE2EConfig) {
-				v.SSHPublicKey = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 10: invalid .SSHUser",
-			config: newAPIExtensionsAzureConfigE2EConfigFromFilled(func(v *APIExtensionsAzureConfigE2EConfig) {
-				v.SSHUser = ""
+				v.SSHUserList = nil
 			}),
 			errorMatcher: IsInvalidConfig,
 		},
