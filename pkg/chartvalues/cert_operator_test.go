@@ -73,11 +73,10 @@ Installation:
           EndpointBase: k8s.test-common-domain
     Secret:
       CertOperator:
-        SecretYaml: |
-          service:
-            vault:
-              config:
-                token: test-token
+        Service:
+          Vault:
+            Config:
+              Token: test-token
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
@@ -117,11 +116,10 @@ Installation:
           EndpointBase: k8s.test-common-domain
     Secret:
       CertOperator:
-        SecretYaml: |
-          service:
-            vault:
-              config:
-                token: test-token
+        Service:
+          Vault:
+            Config:
+              Token: test-token
       Registry:
         PullSecret:
           DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
