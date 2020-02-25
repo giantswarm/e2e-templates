@@ -22,6 +22,7 @@ func newAPIExtensionsChartE2EConfigFromFilled(modifyFunc func(*APIExtensionsChar
 				},
 			},
 			TarballURL: "https://giantswarm.github.com/sample-catalog/kubernetes-test-app-chart-0.3.0.tgz",
+			Version:    "0.3.0",
 		},
 		ChartOperator: APIExtensionsChartE2EConfigChartOperator{
 			Version: "1.0.0",
@@ -68,6 +69,7 @@ chart:
       name: "test-app-secrets"
       namespace: "default"
   tarballURL: "https://giantswarm.github.com/sample-catalog/kubernetes-test-app-chart-0.3.0.tgz"
+  version: "0.3.0"
 
 chartOperator:
   version: "1.0.0"
