@@ -26,8 +26,8 @@
 
 
 [[constraint]]
-  branch = "master"
   name = "github.com/giantswarm/microerror"
+  version = "~0.1.0"
 
 [prune]
   go-tests = true
