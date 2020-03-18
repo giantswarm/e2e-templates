@@ -11,7 +11,6 @@ type CertOperatorConfig struct {
 	CommonDomain       string
 	CRD                CertOperatorConfigCRD
 	Namespace          string
-	RegistryPullSecret string
 	PSP                CertOperatorPSP
 	Vault              CertOperatorVault
 }
@@ -58,9 +57,6 @@ func NewCertOperator(config CertOperatorConfig) (string, error) {
 	}
 	if config.PSP.Name == "" {
 		config.PSP.Name = "cert-operator-psp"
-	}
-	if config.RegistryPullSecret == "" {
-		return "", microerror.Maskf(invalidConfigError, "%T.RegistryPullSecret must not be empty", config)
 	}
 	if config.Vault.Token == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.Vault.Token must not be empty", config)

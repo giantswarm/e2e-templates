@@ -20,8 +20,7 @@ func newCertOperatorConfigFromFilled(modifyFunc func(*CertOperatorConfig)) CertO
 		CRD: CertOperatorConfigCRD{
 			LabelSelector: "test-label-selector",
 		},
-		Namespace:          "test-namespace",
-		RegistryPullSecret: "test-registry-pull-secret",
+		Namespace: "test-namespace",
 		PSP: CertOperatorPSP{
 			Name: "test-cert-operator-psp",
 		},
@@ -77,9 +76,6 @@ Installation:
           Vault:
             Config:
               Token: test-token
-      Registry:
-        PullSecret:
-          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
 namespace: test-namespace
 pspName: test-cert-operator-psp
 `,
@@ -88,8 +84,7 @@ pspName: test-cert-operator-psp
 		{
 			name: "case 2: non-default values set",
 			config: CertOperatorConfig{
-				CommonDomain:       "test-common-domain",
-				RegistryPullSecret: "test-registry-pull-secret",
+				CommonDomain: "test-common-domain",
 				Vault: CertOperatorVault{
 					Token: "test-token",
 				},
@@ -120,9 +115,6 @@ Installation:
           Vault:
             Config:
               Token: test-token
-      Registry:
-        PullSecret:
-          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"test-registry-pull-secret\"}}}"
 namespace: giantswarm
 pspName: cert-operator-psp
 `,
@@ -166,13 +158,6 @@ func Test_NewCertOperator_invalidConfigError(t *testing.T) {
 			name: "case 0: invalid .CommonDomain",
 			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
 				v.CommonDomain = ""
-			}),
-			errorMatcher: IsInvalidConfig,
-		},
-		{
-			name: "case 1: invalid .RegistryPullSecret",
-			config: newCertOperatorConfigFromFilled(func(v *CertOperatorConfig) {
-				v.RegistryPullSecret = ""
 			}),
 			errorMatcher: IsInvalidConfig,
 		},

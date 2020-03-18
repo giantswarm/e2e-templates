@@ -26,9 +26,6 @@ Installation:
           Vault:
             Config:
               Token: {{ .Vault.Token }}
-      Registry:
-        PullSecret:
-          DockerConfigJSON: "{\"auths\":{\"quay.io\":{\"auth\":\"{{ .RegistryPullSecret }}\"}}}"
 namespace: {{ .Namespace }}
 pspName: {{ .PSP.Name }}
 `
