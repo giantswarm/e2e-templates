@@ -1,8 +1,9 @@
 package chartvalues
 
 import (
-	"github.com/giantswarm/e2etemplates/internal/render"
 	"github.com/giantswarm/microerror"
+
+	"github.com/giantswarm/e2etemplates/internal/render"
 )
 
 type NodeOperatorConfig struct {
@@ -12,7 +13,7 @@ type NodeOperatorConfig struct {
 
 func NewNodeOperator(config NodeOperatorConfig) (string, error) {
 	if config.Namespace == "" {
-		config.Namespace = "giantswarm"
+		config.Namespace = namespaceGiantswarm
 	}
 	if config.RegistryPullSecret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.RegistryPullSecret must not be empty", config)

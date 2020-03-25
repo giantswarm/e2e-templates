@@ -1,8 +1,9 @@
 package chartvalues
 
 import (
-	"github.com/giantswarm/e2etemplates/internal/render"
 	"github.com/giantswarm/microerror"
+
+	"github.com/giantswarm/e2etemplates/internal/render"
 )
 
 type APIExtensionsKVMConfigE2EConfig struct {

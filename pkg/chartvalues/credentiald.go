@@ -3,8 +3,9 @@ package chartvalues
 import (
 	"reflect"
 
-	"github.com/giantswarm/e2etemplates/internal/render"
 	"github.com/giantswarm/microerror"
+
+	"github.com/giantswarm/e2etemplates/internal/render"
 )
 
 type CredentialdConfig struct {
