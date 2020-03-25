@@ -12,7 +12,7 @@ type NodeOperatorConfig struct {
 
 func NewNodeOperator(config NodeOperatorConfig) (string, error) {
 	if config.Namespace == "" {
-		config.Namespace = "giantswarm"
+		config.Namespace = namespaceGiantswarm
 	}
 	if config.RegistryPullSecret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.RegistryPullSecret must not be empty", config)

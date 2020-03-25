@@ -5,6 +5,10 @@ import (
 	"github.com/giantswarm/microerror"
 )
 
+const (
+	certOperatorPSP = "cert-operator-psp"
+)
+
 type CertOperatorConfig struct {
 	ClusterRole        CertOperatorConfigClusterRole
 	ClusterRolePSP     CertOperatorConfigClusterRole
@@ -45,19 +49,19 @@ func NewCertOperator(config CertOperatorConfig) (string, error) {
 		config.ClusterRole.Name = "cert-operator"
 	}
 	if config.ClusterRolePSP.BindingName == "" {
-		config.ClusterRolePSP.BindingName = "cert-operator-psp"
+		config.ClusterRolePSP.BindingName = certOperatorPSP
 	}
 	if config.ClusterRolePSP.Name == "" {
-		config.ClusterRolePSP.Name = "cert-operator-psp"
+		config.ClusterRolePSP.Name = certOperatorPSP
 	}
 	if config.CommonDomain == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.CommonDomain must not be empty", config)
 	}
 	if config.Namespace == "" {
-		config.Namespace = "giantswarm"
+		config.Namespace = namespaceGiantswarm
 	}
 	if config.PSP.Name == "" {
-		config.PSP.Name = "cert-operator-psp"
+		config.PSP.Name = certOperatorPSP
 	}
 	if config.RegistryPullSecret == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.RegistryPullSecret must not be empty", config)

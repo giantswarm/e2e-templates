@@ -40,7 +40,7 @@ func NewKVMOperator(config KVMOperatorConfig) (string, error) {
 		return "", microerror.Maskf(invalidConfigError, "%T.ClusterRolePSP.Name must not be empty", config)
 	}
 	if config.Namespace == "" {
-		config.Namespace = "giantswarm"
+		config.Namespace = namespaceGiantswarm
 	}
 	if config.PSP.Name == "" {
 		return "", microerror.Maskf(invalidConfigError, "%T.PSP.Name must not be empty", config)
